@@ -3,6 +3,7 @@
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 20px;
+    align-items: center;
 
     .tab {
         padding: 6px 18px;
@@ -23,6 +24,49 @@
             background: var(--accent-color);
             border-color: var(--accent-color);
             color: var(--accent-color-text);
+        }
+    }
+
+    .tab-dropdown {
+        position: relative;
+        display: inline-block;
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 140px;
+            margin-top: 4px;
+            background: var(--card-background);
+            border: 1px solid var(--card-separator-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow-l2);
+            z-index: 100;
+            overflow: hidden;
+
+            a {
+                display: block;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                color: var(--card-text-color-secondary);
+                cursor: pointer;
+                transition: all 0.15s;
+
+                &:hover {
+                    background: var(--card-background-selected);
+                    color: var(--accent-color);
+                }
+
+                &.active {
+                    background: var(--accent-color);
+                    color: var(--accent-color-text);
+                }
+            }
+        }
+
+        .dropdown-content.show {
+            display: block;
         }
     }
 }
