@@ -1,0 +1,50 @@
+baseURL = "https://mingyue91.github.io/ming91/"
+languageCode = "zh-cn"
+title = "min9's Blog"
+theme = "stack"
+
+paginate = 10
+defaultContentLanguage = "zh-cn"
+enableEmoji = true
+hasCJKLanguage = true
+
+[params]
+  description = "min9 的个人博客"
+  mainSections = ["posts"]
+  dateFormat = "2006-01-02"
+
+  [params.footer]
+    since = 2026
+
+  [params.sidebar]
+    avatar = "/avatar.jpg"
+    subtitle = "二次元 & 技术"
+
+  [params.widgets]
+    enabled = ["search", "recent_posts", "tag_cloud", "archives"]
+
+  [params.color]
+    scheme = "auto"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "posts"
+    name = "归档"
+    url = "/posts/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 3
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
