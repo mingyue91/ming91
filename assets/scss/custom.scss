@@ -1,0 +1,28 @@
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    .tab {
+        padding: 6px 18px;
+        border: 1px solid var(--card-separator-color);
+        border-radius: 20px;
+        background: var(--card-background);
+        color: var(--card-text-color-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        &.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--accent-color-text);
+        }
+    }
+}

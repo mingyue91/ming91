@@ -3,7 +3,7 @@ title: "Hello World"
 description: "我的第一篇博客"
 date: 2026-05-18T00:00:00+08:00
 slug: hello-world
-categories: ["随笔"]
+categories: ["其他"]
 tags: ["blog", "hello"]
 draft: false
 ---

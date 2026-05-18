@@ -1,0 +1,49 @@
+{{ define "main" }}
+<div class="category-tabs">
+    <button class="tab active" data-category="all">全部</button>
+    <button class="tab" data-category="云计算">云计算</button>
+    <button class="tab" data-category="后端">后端</button>
+    <button class="tab" data-category="AI">AI</button>
+    <button class="tab" data-category="其他">其他</button>
+</div>
+
+{{- $paginator := partial "helper/paginator.html" . -}}
+
+<section class="article-list">
+    {{ range $index, $element := $paginator.Pages }}
+        {{ $cat := index .Params.categories 0 | default "其他" }}
+        <article class="card" data-category="{{ $cat }}">
+            {{ partial "article-list/default" . }}
+        </article>
+    {{ end }}
+</section>
+
+{{- partial "pagination.html" . -}}
+{{- partial "footer/footer" . -}}
+
+<script>
+(function() {
+    var tabs = document.querySelectorAll('.category-tabs .tab');
+    var articles = document.querySelectorAll('.article-list .card');
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            var cat = this.getAttribute('data-category');
+            articles.forEach(function(article) {
+                if (cat === 'all' || article.getAttribute('data-category') === cat) {
+                    article.style.display = '';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        });
+    });
+})();
+</script>
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}
