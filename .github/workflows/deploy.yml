@@ -14,16 +14,12 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-defaults:
-  run:
-    shell: pwsh
-
 env:
-  HUGO_VERSION: 0.136.0
+  HUGO_VERSION: 0.161.0
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
