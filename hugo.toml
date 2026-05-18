@@ -1,5 +1,5 @@
 baseURL = "https://mingyue91.github.io/ming91/"
-languageCode = "zh-cn"
+locale = "zh-cn"
 title = "min9's Blog"
 theme = "stack"
 
@@ -11,7 +11,10 @@ hasCJKLanguage = true
 [params]
   description = "min9 的个人博客"
   mainSections = ["posts"]
-  dateFormat = "2006-01-02"
+
+  [params.dateFormat]
+    published = "2006-01-02"
+    updated = "2006-01-02"
 
   [params.footer]
     since = 2026
