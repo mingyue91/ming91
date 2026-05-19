@@ -2,6 +2,7 @@
 title: "Amazon S3 策略示例：从入门到进阶"
 description: "10 个实用的 S3 访问控制策略，覆盖常见业务场景"
 date: 2026-05-18T00:00:00+08:00
+lastmod: 2026-05-19T00:00:00+08:00
 slug: aws-s3-policy-examples
 categories: ["云计算"]
 tags: ["aws", "s3", "iam", "安全", "存储"]

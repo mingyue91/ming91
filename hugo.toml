@@ -12,6 +12,8 @@ hasCJKLanguage = true
   description = "min9 的个人博客"
   mainSections = ["posts"]
 
+  SortBy = "lastmod"
+
   [params.dateFormat]
     published = "2006-01-02"
     updated = "2006-01-02"
