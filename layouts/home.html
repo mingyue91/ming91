@@ -20,9 +20,17 @@
 </div>
 
 {{- $paginator := partial "helper/paginator.html" . -}}
+{{- $pinned := where $paginator.Pages "Params.pinned" true -}}
+{{- $regular := where $paginator.Pages "Params.pinned" "ne" true -}}
 
 <section class="article-list">
-    {{ range $index, $element := $paginator.Pages }}
+    {{ range $pinned }}
+        {{ $cat := index .Params.categories 0 | default "其他" }}
+        <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}" data-pinned="true">
+            {{ partial "article-list/default" . }}
+        </article>
+    {{ end }}
+    {{ range $regular }}
         {{ $cat := index .Params.categories 0 | default "其他" }}
         <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}">
             {{ partial "article-list/default" . }}
