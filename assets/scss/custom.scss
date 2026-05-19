@@ -74,7 +74,7 @@
 .article-list .card {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 
-    &[data-pinned="true"] {
+    .category-filter-active &[data-pinned="true"] {
         position: relative;
 
         &::after {

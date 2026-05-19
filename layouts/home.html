@@ -20,19 +20,12 @@
 </div>
 
 {{- $paginator := partial "helper/paginator.html" . -}}
-{{- $pinned := where $paginator.Pages "Params.pinned" true -}}
-{{- $regular := where $paginator.Pages "Params.pinned" "ne" true -}}
 
 <section class="article-list">
-    {{ range $pinned }}
+    {{ range $index, $element := $paginator.Pages }}
         {{ $cat := index .Params.categories 0 | default "其他" }}
-        <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}" data-pinned="true">
-            {{ partial "article-list/default" . }}
-        </article>
-    {{ end }}
-    {{ range $regular }}
-        {{ $cat := index .Params.categories 0 | default "其他" }}
-        <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}">
+        {{ $pinned := .Params.pinned | default false }}
+        <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}"{{ if $pinned }} data-pinned="true"{{ end }}>
             {{ partial "article-list/default" . }}
         </article>
     {{ end }}
@@ -55,6 +48,7 @@
 
     function filterBy(category, tag) {
         tabs.forEach(function(t) { t.classList.remove('active'); });
+        document.querySelector('.category-tabs').classList.toggle('category-filter-active', category !== 'all');
         document.querySelector('.dropbtn')?.classList.remove('active');
 
         if (category !== 'all') {
@@ -79,6 +73,9 @@
         var dropActive = document.querySelector('.dropdown-content a.active');
         if (dropActive) dropActive.classList.remove('active');
 
+        var list = document.querySelector('.article-list');
+        var visible = [];
+
         articles.forEach(function(article) {
             var show = false;
             if (category === 'all') {
@@ -90,7 +87,15 @@
                 show = article.getAttribute('data-category') === category;
             }
             article.style.display = show ? '' : 'none';
+            if (show) visible.push(article);
         });
+
+        if (category !== 'all') {
+            var pinned = visible.filter(function(a) { return a.getAttribute('data-pinned') === 'true'; });
+            var rest = visible.filter(function(a) { return a.getAttribute('data-pinned') !== 'true'; });
+            pinned.forEach(function(a) { list.appendChild(a); });
+            rest.forEach(function(a) { list.appendChild(a); });
+        }
     }
 
     tabs.forEach(function(tab) {
