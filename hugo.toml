@@ -14,12 +14,17 @@ hasCJKLanguage = true
 
   SortBy = "lastmod"
 
+  copyright = "© 2026 min9"
+
   [params.dateFormat]
     published = "2006-01-02"
     updated = "2006-01-02"
 
   [params.footer]
     since = 2026
+
+  [params.author]
+    name = "min9"
 
   [params.sidebar]
     avatar = "/avatar.jpg"
@@ -32,6 +37,24 @@ hasCJKLanguage = true
     scheme = "auto"
 
 [menu]
+  [[menu.social]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/mingyue91"
+    weight = 1
+    [menu.social.params]
+      Icon = "brand-github"
+      newTab = true
+
+  [[menu.social]]
+    identifier = "rss"
+    name = "RSS"
+    url = "/index.xml"
+    weight = 2
+    [menu.social.params]
+      Icon = "rss"
+      newTab = true
+
   [[menu.main]]
     identifier = "home"
     name = "首页"
