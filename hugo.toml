@@ -12,8 +12,6 @@ hasCJKLanguage = true
   description = "min9 的个人博客"
   mainSections = ["posts"]
 
-  SortBy = "lastmod"
-
   copyright = "© 2026 min9"
 
   [params.dateFormat]
