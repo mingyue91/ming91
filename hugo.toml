@@ -21,6 +21,12 @@ hasCJKLanguage = true
   [params.footer]
     since = 2026
 
+  favicon = "/avatar.jpg"
+
+  [params.opengraph.twitter]
+    site = "mingyue91"
+    card = "summary_large_image"
+
   [params.author]
     name = "min9"
 
