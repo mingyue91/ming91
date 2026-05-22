@@ -1,7 +1,7 @@
 ---
 title: "AWS 数据库服务详解：RDS 与 DynamoDB"
 description: "深入对比 AWS 两大核心数据库服务——关系型的 RDS 与非关系型的 DynamoDB，帮你选对数据库"
-date: 2026-05-19T00:00:00+08:00
+date: 2026-05-22T00:00:00+08:00
 slug: aws-database-rds-dynamodb
 categories: ["云计算"]
 tags: ["aws", "数据库", "rds", "dynamodb", "入门"]

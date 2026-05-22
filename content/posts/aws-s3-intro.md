@@ -1,7 +1,7 @@
 ---
 title: "Amazon S3 入门：对象存储基础"
 description: "从零开始理解 S3——什么是对象存储、核心概念、存储类与常见应用场景"
-date: 2026-05-19T00:00:00+08:00
+date: 2026-05-22T00:00:00+08:00
 slug: aws-s3-intro
 categories: ["云计算"]
 tags: ["aws", "s3", "存储", "入门"]

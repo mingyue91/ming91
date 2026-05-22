@@ -1,7 +1,7 @@
 ---
 title: "AWS 存储服务全景"
 description: "S3、EBS、EFS、FSx、Storage Gateway……一张图看懂 AWS 所有存储服务"
-date: 2026-05-19T00:00:00+08:00
+date: 2026-05-22T00:00:00+08:00
 slug: aws-storage-overview
 categories: ["云计算"]
 tags: ["aws", "存储", "s3", "ebs", "efs", "入门"]
