@@ -117,6 +117,48 @@ docker --version
 docker run hello-world
 ```
 
+## 配置国内镜像源
+
+由于网络原因，直接从 Docker Hub 拉取镜像可能很慢。推荐配置国内镜像加速源（2026 年 5 月确认可用）：
+
+| 镜像源 | 地址 | 说明 |
+|--------|------|------|
+| **轩辕镜像**（推荐）| `https://docker.xuanyuan.me` | 免费，支持 Docker/Containerd/K8s |
+| **中科大镜像** | `https://docker.mirrors.ustc.edu.cn` | 学术源，适合教育网 |
+| **网易镜像** | `https://hub-mirror.c.163.com` | 网易提供的免费加速 |
+| **DaoCloud** | `https://docker.m.daocloud.io` | DaoCloud 提供的加速服务 |
+| **阿里云** | `https://<你的ID>.mirror.aliyuncs.com` | 需登录阿里云获取专属地址 |
+| **腾讯云** | `https://mirror.ccs.tencentyun.com` | 仅腾讯云服务器内使用 |
+
+### Docker 配置方法
+
+编辑或创建 `/etc/docker/daemon.json`（Linux）或通过 Docker Desktop 设置（Windows/Mac）：
+
+```json
+{
+  "registry-mirrors": [
+    "https://docker.xuanyuan.me",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com"
+  ]
+}
+```
+
+重启 Docker 使配置生效：
+
+```bash
+sudo systemctl restart docker   # Linux
+# Windows/Mac: 在 Docker Desktop 设置中配置后点击重启
+```
+
+验证配置是否生效：
+
+```bash
+docker info | grep -A 5 "Registry Mirrors"
+```
+
+> 配置多个镜像源作为冗余，当其中一个不可用时自动切换到下一个。
+
 ## 常用命令
 
 ### 镜像管理
