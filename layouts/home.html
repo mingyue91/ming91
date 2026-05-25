@@ -96,6 +96,11 @@
             pinned.forEach(function(a) { list.appendChild(a); });
             rest.forEach(function(a) { list.appendChild(a); });
         }
+
+        var pagination = document.querySelector('.pagination');
+        if (pagination) {
+            pagination.style.display = visible.length > 0 ? '' : 'none';
+        }
     }
 
     tabs.forEach(function(tab) {
