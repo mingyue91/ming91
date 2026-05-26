@@ -1,4 +1,12 @@
 {{ define "main" }}
+<div class="search-box">
+    <input type="text" id="search-input" placeholder="搜索文章..." />
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    </svg>
+    <button type="button" id="search-clear" class="search-clear" style="display:none">&times;</button>
+</div>
+
 <div class="category-tabs">
     <button class="tab active" data-category="all">全部</button>
     <div class="tab-dropdown">
@@ -137,7 +145,100 @@
     document.addEventListener('click', function() {
         document.querySelector('.dropdown-content')?.classList.remove('show');
     });
-})();
+
+    /* Search */
+    var searchInput = document.getElementById('search-input');
+    var searchClear = document.getElementById('search-clear');
+    var currentCategory = 'all';
+    var currentTag = null;
+
+    function updateTabsForCategory(cat, tag) {
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        if (!cat || cat === 'all') {
+            var allBtn = document.querySelector('.category-tabs > .tab[data-category="all"]');
+            if (allBtn) allBtn.classList.add('active');
+        } else if (tag) {
+            document.querySelector('.dropbtn')?.classList.add('active');
+        } else {
+            var found = Array.from(tabs).find(function(t) { return t.getAttribute('data-category') === cat; });
+            if (found) found.classList.add('active');
+        }
+    }
+
+    function applyFilters() {
+        var keyword = (searchInput.value || '').toLowerCase().trim();
+        var showAll = !keyword;
+
+        articles.forEach(function(article) {
+            var catMatch = false;
+            if (currentCategory === 'all') {
+                catMatch = true;
+            } else if (currentTag) {
+                var articleTags = article.getAttribute('data-tags') || '';
+                catMatch = articleTags.indexOf(currentTag) !== -1;
+            } else {
+                catMatch = article.getAttribute('data-category') === currentCategory;
+            }
+
+            var kwMatch = showAll;
+            if (!showAll) {
+                var titleEl = article.querySelector('.article-title a');
+                var title = titleEl ? titleEl.textContent.toLowerCase() : '';
+                var descEl = article.querySelector('.article-subtitle');
+                var desc = descEl ? descEl.textContent.toLowerCase() : '';
+                var tags = (article.getAttribute('data-tags') || '').toLowerCase();
+                kwMatch = title.indexOf(keyword) !== -1 || desc.indexOf(keyword) !== -1 || tags.indexOf(keyword) !== -1;
+            }
+
+            article.style.display = catMatch && kwMatch ? '' : 'none';
+        });
+
+        var visible = Array.from(articles).filter(function(a) { return a.style.display !== 'none'; });
+        var list = document.querySelector('.article-list');
+        if (currentCategory !== 'all') {
+            var pinned = visible.filter(function(a) { return a.getAttribute('data-pinned') === 'true'; });
+            var rest = visible.filter(function(a) { return a.getAttribute('data-pinned') !== 'true'; });
+            pinned.forEach(function(a) { list.appendChild(a); });
+            rest.forEach(function(a) { list.appendChild(a); });
+        }
+
+        var pagination = document.querySelector('.pagination');
+        if (pagination) pagination.style.display = visible.length > 0 ? '' : 'none';
+        document.querySelector('.category-tabs').classList.toggle('category-filter-active', currentCategory !== 'all');
+        searchClear.style.display = keyword ? '' : 'none';
+    }
+
+    /* Override filterBy to track state */
+    var origFilterBy = filterBy;
+    filterBy = function(cat, tag) {
+        currentCategory = cat || 'all';
+        currentTag = tag || null;
+        applyFilters();
+        if (cat === 'all') {
+            updateTabsForCategory('all', null);
+        } else if (tag) {
+            updateTabsForCategory('云计算', tag);
+        } else {
+            updateTabsForCategory(cat, null);
+        }
+    };
+
+    searchInput.addEventListener('input', function() {
+        if (this.value) {
+            var allTab = document.querySelector('.category-tabs > .tab[data-category="all"]');
+            if (allTab) allTab.classList.add('active');
+            tabs.forEach(function(t) { if (t !== allTab) t.classList.remove('active'); });
+        }
+        applyFilters();
+    });
+
+    searchClear.addEventListener('click', function() {
+        searchInput.value = '';
+        searchInput.focus();
+        applyFilters();
+    });
+
+    applyFilters();
 </script>
 {{ end }}
 
