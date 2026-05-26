@@ -1,3 +1,59 @@
+@media (max-width: 767px) {
+    .left-sidebar {
+        --sidebar-avatar-size: 60px;
+        --sidebar-element-separation: var(--spacing-sm);
+        --emoji-size: 22px;
+        --emoji-font-size: 11px;
+
+        header {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+
+            .site-meta {
+                gap: 2px;
+            }
+
+            .site-name {
+                font-size: 1.2rem;
+            }
+
+            .site-description {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    .search-box {
+        margin-top: 4px;
+        margin-bottom: 12px;
+
+        #search-input {
+            padding: 10px 8px;
+            font-size: 0.9rem;
+        }
+    }
+
+    .category-tabs {
+        gap: 6px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+
+        .tab {
+            padding: 5px 14px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab-dropdown {
+            flex-shrink: 0;
+        }
+    }
+}
+
 .search-box {
     position: relative;
     display: flex;
