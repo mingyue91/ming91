@@ -260,6 +260,124 @@
     }
 }
 
+/* PDF export button */
+.pdf-export-section {
+    text-align: right;
+    padding: 0 0 12px;
+    margin-top: 8px;
+}
+
+.pdf-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: var(--card-text-color-secondary);
+    background: var(--card-background);
+    border: 1px solid var(--card-separator-color);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+        background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.pdf-export-icon {
+    flex-shrink: 0;
+}
+
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .left-sidebar,
+    .right-sidebar,
+    .article-toc,
+    .pdf-export-section,
+    .article-footer,
+    .article-section,
+    .related-content,
+    #comments,
+    .footer-links,
+    .pagination,
+    .footer,
+    .copyCodeButton,
+    .article-nav,
+    .widget,
+    .category-tabs,
+    .search-box {
+        display: none !important;
+    }
+
+    .article-page .container,
+    .article-page .main-article {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .article-page .article-content {
+        color: black !important;
+    }
+
+    .article-page .article-content a {
+        color: #1a0dab !important;
+        text-decoration: underline !important;
+    }
+
+    .article-page .article-content pre,
+    .article-page .article-content code {
+        background: #f5f5f5 !important;
+        color: black !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+    }
+
+    .article-page .article-content img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    .article-page .article-content table {
+        page-break-inside: avoid;
+    }
+
+    .article-page .article-content h1,
+    .article-page .article-content h2,
+    .article-page .article-content h3,
+    .article-page .article-content h4 {
+        page-break-after: avoid;
+    }
+
+    .article-header .article-title {
+        color: black !important;
+    }
+
+    .article-header .article-meta {
+        color: #666 !important;
+    }
+
+    .article-category a {
+        border-color: #ccc !important;
+        color: #333 !important;
+    }
+}
+
 .footer-links {
     text-align: center;
     padding: 12px 0 8px;
