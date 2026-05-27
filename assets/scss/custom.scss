@@ -260,26 +260,34 @@
     }
 }
 
-/* PDF export button */
-.pdf-export-section {
-    text-align: right;
-    padding: 0 0 12px;
-    margin-top: 8px;
+/* PDF export button inline with tags */
+.article-footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.article-footer-tags {
+    flex: 1 1 auto;
 }
 
 .pdf-export-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    font-size: 0.85rem;
+    gap: 4px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
     font-family: inherit;
     color: var(--card-text-color-secondary);
     background: var(--card-background);
     border: 1px solid var(--card-separator-color);
-    border-radius: 20px;
+    border-radius: 16px;
     cursor: pointer;
     transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
 
     &:hover {
         color: var(--accent-color);
@@ -306,7 +314,7 @@
     .left-sidebar,
     .right-sidebar,
     .article-toc,
-    .pdf-export-section,
+    .pdf-export-btn,
     .article-footer,
     .article-section,
     .related-content,
