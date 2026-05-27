@@ -25,9 +25,14 @@ content/posts/
 ├── aws-database-rds-dynamodb.md      # 2026-05-22 | 云计算
 ├── aws-s3-intro.md                   # 2026-05-22 | 云计算
 ├── aws-storage-overview.md           # 2026-05-22 | 云计算（置顶）
-└── docker-add-user-to-group.md       # 2026-05-25 | 容器Docker
+├── docker-add-user-to-group.md       # 2026-05-25 | 容器Docker
+├── dockerfile-reference.md           # 2026-05-27 | 容器Docker
+├── docker-container-commands.md      # 2026-05-27 | 容器Docker
+├── docker-image-commands.md          # 2026-05-27 | 容器Docker
+├── docker-storage-network.md         # 2026-05-27 | 容器Docker
+└── docker-compose-commands.md        # 2026-05-27 | 容器Docker
 ```
-共 11 篇文章，主要分类：`云计算`(8), `容器Docker`(2), `其他`(1)
+共 16 篇文章，主要分类：`云计算`(8), `容器Docker`(7), `其他`(1)
 
 ## 文章 Front Matter 规范
 ```yaml
@@ -46,7 +51,7 @@ draft: false
 | 分类 | 常用标签 |
 |------|----------|
 | 云计算 | aws, cloud, s3, iam, ec2, 存储, 安全, 数据库, 入门 |
-| 容器Docker | docker, 容器, linux, 权限 |
+| 容器Docker | docker, 容器, dockerfile, linux, 权限, 入门, 进阶, 运维, compose, volume, 网络, 镜像 |
 | 其他 | blog, hello |
 
 ## 自定义功能
@@ -69,6 +74,12 @@ git add .; git commit -m "msg"; git push  # 发布
 - 不在代码中硬编码凭据
 
 ## 上次会话（2026-05-27）
+- 新增 5 篇 Docker 命令系列文章：
+  - `dockerfile-reference.md` — Dockerfile 全部 17 个指令详解
+  - `docker-container-commands.md` — 容器生命周期管理（create/run/stop/exec/logs/cp/inspect 等 22 个命令）
+  - `docker-image-commands.md` — 镜像管理（pull/push/build/tag/save/load/history 等 13 个命令）
+  - `docker-storage-network.md` — volume、network、system 三大子系统
+  - `docker-compose-commands.md` — Compose V2 全部子命令
 - 新增文章导出 PDF 功能
   - 每篇文章底部添加"导出 PDF"按钮
   - 使用本地托管 html2pdf.bundle.min.js（零 CDN 依赖）
