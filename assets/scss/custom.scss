@@ -29,21 +29,21 @@
         margin-bottom: 12px;
 
         #search-input {
-            padding: 10px 8px;
-            font-size: 0.9rem;
+            padding: 14px 12px;
+            font-size: 1rem;
         }
     }
 
     .category-tabs {
-        gap: 6px;
+        gap: 8px;
         flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 4px;
 
         .tab {
-            padding: 5px 14px;
-            font-size: 0.82rem;
+            padding: 10px 18px;
+            font-size: 0.95rem;
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -58,22 +58,22 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     background: var(--card-background);
-    border: 1.5px solid var(--card-separator-color);
-    border-radius: 24px;
-    padding: 0 16px;
+    border: 2px solid var(--card-separator-color);
+    border-radius: 28px;
+    padding: 0 18px;
     transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus-within {
         border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 20%, transparent);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 20%, transparent);
     }
 
     .search-icon {
         flex-shrink: 0;
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
         color: var(--card-text-color-tertiary);
     }
 
@@ -81,8 +81,8 @@
         flex: 1;
         border: none;
         background: transparent;
-        padding: 12px 10px;
-        font-size: 0.95rem;
+        padding: 16px 12px;
+        font-size: 1.1rem;
         font-family: inherit;
         color: var(--card-text-color-main);
         outline: none;
@@ -96,11 +96,11 @@
         flex-shrink: 0;
         background: none;
         border: none;
-        font-size: 1.3rem;
+        font-size: 1.6rem;
         line-height: 1;
         color: var(--card-text-color-tertiary);
         cursor: pointer;
-        padding: 4px 0 4px 8px;
+        padding: 6px 0 6px 10px;
 
         &:hover {
             color: var(--card-text-color-main);
@@ -111,23 +111,26 @@
 .category-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 28px;
     align-items: center;
 
     .tab {
-        padding: 6px 18px;
-        border: 1px solid var(--card-separator-color);
-        border-radius: 20px;
+        padding: 12px 24px;
+        border: 2px solid var(--card-separator-color);
+        border-radius: 24px;
         background: var(--card-background);
         color: var(--card-text-color-secondary);
-        font-size: 0.9rem;
+        font-size: 1.05rem;
+        font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
 
         &:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         &.active {
@@ -146,19 +149,19 @@
             position: absolute;
             top: 100%;
             left: 0;
-            min-width: 140px;
-            margin-top: 4px;
+            min-width: 160px;
+            margin-top: 8px;
             background: var(--card-background);
-            border: 1px solid var(--card-separator-color);
-            border-radius: 10px;
+            border: 2px solid var(--card-separator-color);
+            border-radius: 14px;
             box-shadow: var(--shadow-l2);
             z-index: 100;
             overflow: hidden;
 
             a {
                 display: block;
-                padding: 8px 16px;
-                font-size: 0.9rem;
+                padding: 12px 20px;
+                font-size: 1rem;
                 color: var(--card-text-color-secondary);
                 cursor: pointer;
                 transition: all 0.15s;
@@ -192,7 +195,7 @@
             position: absolute;
             top: 12px;
             right: 16px;
-            font-size: 0.78rem;
+            font-size: 0.85rem;
             color: var(--card-text-color-tertiary);
             opacity: 0.7;
         }
@@ -260,19 +263,6 @@
     }
 }
 
-/* PDF export button inline with tags */
-.article-footer-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-}
-
-.article-footer-tags {
-    flex: 1 1 auto;
-}
-
 .pdf-export-btn {
     display: inline-flex;
     align-items: center;
@@ -303,6 +293,18 @@
 
 .pdf-export-icon {
     flex-shrink: 0;
+}
+
+.article-footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.article-footer-tags {
+    flex: 1 1 auto;
 }
 
 @media print {

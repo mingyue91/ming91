@@ -50,195 +50,164 @@
 
 <script>
 (function() {
-    var tabs = document.querySelectorAll('.category-tabs > .tab, .category-tabs .dropbtn');
-    var dropdownItems = document.querySelectorAll('.dropdown-content a');
-    var articles = document.querySelectorAll('.article-list .card');
+    'use strict';
+    
+    // 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+        var tabs = document.querySelectorAll('.category-tabs > .tab, .category-tabs .dropbtn');
+        var dropdownItems = document.querySelectorAll('.dropdown-content a');
+        var articles = document.querySelectorAll('.article-list .card');
+        var searchInput = document.getElementById('search-input');
+        var searchClear = document.getElementById('search-clear');
+        var currentCategory = 'all';
+        var currentTag = null;
 
-    function filterBy(category, tag) {
-        tabs.forEach(function(t) { t.classList.remove('active'); });
-        document.querySelector('.category-tabs').classList.toggle('category-filter-active', category !== 'all');
-        document.querySelector('.dropbtn')?.classList.remove('active');
+        // 过滤函数
+        function filterBy(category, tag) {
+            currentCategory = category || 'all';
+            currentTag = tag || null;
+            
+            // 更新标签状态
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            document.querySelector('.category-tabs').classList.toggle('category-filter-active', currentCategory !== 'all');
+            
+            var dropActive = document.querySelector('.dropdown-content a.active');
+            if (dropActive) dropActive.classList.remove('active');
 
-        if (category !== 'all') {
-            if (tag) {
-                var tabBtn = document.querySelector('.dropbtn');
-                if (tabBtn) tabBtn.classList.add('active');
-                tabBtn.textContent = '云计算 ▾';
+            if (currentCategory === 'all') {
+                var allBtn = document.querySelector('.category-tabs > .tab[data-category="all"]');
+                if (allBtn) allBtn.classList.add('active');
+            } else if (currentTag) {
+                var dropBtn = document.querySelector('.dropbtn');
+                if (dropBtn) {
+                    dropBtn.classList.add('active');
+                    var activeItem = Array.from(dropdownItems).find(function(item) { 
+                        return item.getAttribute('data-category') === currentTag; 
+                    });
+                    if (activeItem) activeItem.classList.add('active');
+                }
             } else {
                 var found = Array.from(tabs).find(function(t) {
-                    return t.getAttribute('data-category') === category;
+                    return t.getAttribute('data-category') === currentCategory;
                 });
                 if (found) found.classList.add('active');
             }
-        } else {
-            var allBtn = document.querySelector('.tab.active');
-            if (!allBtn) {
-                var firstTab = document.querySelector('.category-tabs > .tab[data-category="all"]');
-                if (firstTab) firstTab.classList.add('active');
-            }
+
+            // 应用过滤
+            applyFilters();
         }
 
-        var dropActive = document.querySelector('.dropdown-content a.active');
-        if (dropActive) dropActive.classList.remove('active');
+        // 应用过滤和搜索
+        function applyFilters() {
+            var keyword = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            var showAll = !keyword;
 
-        var list = document.querySelector('.article-list');
-        var visible = [];
+            var list = document.querySelector('.article-list');
+            var visible = [];
 
-        articles.forEach(function(article) {
-            var show = false;
-            if (category === 'all') {
-                show = true;
-            } else if (tag) {
-                var articleTags = article.getAttribute('data-tags') || '';
-                show = articleTags.indexOf(tag) !== -1;
-            } else {
-                show = article.getAttribute('data-category') === category;
+            articles.forEach(function(article) {
+                var catMatch = false;
+                if (currentCategory === 'all') {
+                    catMatch = true;
+                } else if (currentTag) {
+                    var articleTags = article.getAttribute('data-tags') || '';
+                    catMatch = articleTags.indexOf(currentTag) !== -1;
+                } else {
+                    catMatch = article.getAttribute('data-category') === currentCategory;
+                }
+
+                var kwMatch = showAll;
+                if (!showAll) {
+                    var titleEl = article.querySelector('.article-title a');
+                    var title = titleEl ? titleEl.textContent.toLowerCase() : '';
+                    var descEl = article.querySelector('.article-subtitle');
+                    var desc = descEl ? descEl.textContent.toLowerCase() : '';
+                    var tags = (article.getAttribute('data-tags') || '').toLowerCase();
+                    kwMatch = title.indexOf(keyword) !== -1 || desc.indexOf(keyword) !== -1 || tags.indexOf(keyword) !== -1;
+                }
+
+                article.style.display = catMatch && kwMatch ? '' : 'none';
+                if (catMatch && kwMatch) visible.push(article);
+            });
+
+            // 置顶文章排序
+            if (currentCategory !== 'all') {
+                var pinned = visible.filter(function(a) { return a.getAttribute('data-pinned') === 'true'; });
+                var rest = visible.filter(function(a) { return a.getAttribute('data-pinned') !== 'true'; });
+                pinned.forEach(function(a) { list.appendChild(a); });
+                rest.forEach(function(a) { list.appendChild(a); });
             }
-            article.style.display = show ? '' : 'none';
-            if (show) visible.push(article);
+
+            // 更新分页和搜索清除按钮
+            var pagination = document.querySelector('.pagination');
+            if (pagination) pagination.style.display = visible.length > 0 ? '' : 'none';
+            if (searchClear) searchClear.style.display = keyword ? '' : 'none';
+        }
+
+        // 绑定标签点击事件
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.querySelector('.dropdown-content')?.classList.remove('show');
+                filterBy(this.getAttribute('data-category'), null);
+            });
         });
 
-        if (category !== 'all') {
-            var pinned = visible.filter(function(a) { return a.getAttribute('data-pinned') === 'true'; });
-            var rest = visible.filter(function(a) { return a.getAttribute('data-pinned') !== 'true'; });
-            pinned.forEach(function(a) { list.appendChild(a); });
-            rest.forEach(function(a) { list.appendChild(a); });
+        // 绑定下拉菜单点击事件
+        dropdownItems.forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.querySelector('.dropdown-content')?.classList.remove('show');
+                var tag = this.getAttribute('data-category');
+                filterBy('云计算', tag);
+            });
+        });
+
+        // 下拉菜单按钮点击
+        var dropbtn = document.querySelector('.dropbtn');
+        if (dropbtn) {
+            dropbtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelector('.dropdown-content')?.classList.toggle('show');
+            });
         }
 
-        var pagination = document.querySelector('.pagination');
-        if (pagination) {
-            pagination.style.display = visible.length > 0 ? '' : 'none';
-        }
-    }
-
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
+        // 点击其他地方关闭下拉菜单
+        document.addEventListener('click', function() {
             document.querySelector('.dropdown-content')?.classList.remove('show');
-            filterBy(this.getAttribute('data-category'), null);
-        });
-    });
-
-    dropdownItems.forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelector('.dropdown-content')?.classList.remove('show');
-            document.querySelector('.dropdown-content a.active')?.classList.remove('active');
-            this.classList.add('active');
-
-            var tag = this.getAttribute('data-category');
-            var tabBtn = document.querySelector('.dropbtn');
-            if (tabBtn) {
-                tabBtn.textContent = '云计算 ▾';
-            }
-            filterBy('云计算', tag);
-        });
-    });
-
-    var dropbtn = document.querySelector('.dropbtn');
-    if (dropbtn) {
-        dropbtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelector('.dropdown-content')?.classList.toggle('show');
-        });
-    }
-
-    document.addEventListener('click', function() {
-        document.querySelector('.dropdown-content')?.classList.remove('show');
-    });
-
-    /* Search */
-    var searchInput = document.getElementById('search-input');
-    var searchClear = document.getElementById('search-clear');
-    var currentCategory = 'all';
-    var currentTag = null;
-
-    function updateTabsForCategory(cat, tag) {
-        tabs.forEach(function(t) { t.classList.remove('active'); });
-        if (!cat || cat === 'all') {
-            var allBtn = document.querySelector('.category-tabs > .tab[data-category="all"]');
-            if (allBtn) allBtn.classList.add('active');
-        } else if (tag) {
-            document.querySelector('.dropbtn')?.classList.add('active');
-        } else {
-            var found = Array.from(tabs).find(function(t) { return t.getAttribute('data-category') === cat; });
-            if (found) found.classList.add('active');
-        }
-    }
-
-    function applyFilters() {
-        var keyword = (searchInput.value || '').toLowerCase().trim();
-        var showAll = !keyword;
-
-        articles.forEach(function(article) {
-            var catMatch = false;
-            if (currentCategory === 'all') {
-                catMatch = true;
-            } else if (currentTag) {
-                var articleTags = article.getAttribute('data-tags') || '';
-                catMatch = articleTags.indexOf(currentTag) !== -1;
-            } else {
-                catMatch = article.getAttribute('data-category') === currentCategory;
-            }
-
-            var kwMatch = showAll;
-            if (!showAll) {
-                var titleEl = article.querySelector('.article-title a');
-                var title = titleEl ? titleEl.textContent.toLowerCase() : '';
-                var descEl = article.querySelector('.article-subtitle');
-                var desc = descEl ? descEl.textContent.toLowerCase() : '';
-                var tags = (article.getAttribute('data-tags') || '').toLowerCase();
-                kwMatch = title.indexOf(keyword) !== -1 || desc.indexOf(keyword) !== -1 || tags.indexOf(keyword) !== -1;
-            }
-
-            article.style.display = catMatch && kwMatch ? '' : 'none';
         });
 
-        var visible = Array.from(articles).filter(function(a) { return a.style.display !== 'none'; });
-        var list = document.querySelector('.article-list');
-        if (currentCategory !== 'all') {
-            var pinned = visible.filter(function(a) { return a.getAttribute('data-pinned') === 'true'; });
-            var rest = visible.filter(function(a) { return a.getAttribute('data-pinned') !== 'true'; });
-            pinned.forEach(function(a) { list.appendChild(a); });
-            rest.forEach(function(a) { list.appendChild(a); });
+        // 搜索事件
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                if (this.value) {
+                    var allTab = document.querySelector('.category-tabs > .tab[data-category="all"]');
+                    if (allTab) {
+                        tabs.forEach(function(t) { t.classList.remove('active'); });
+                        allTab.classList.add('active');
+                        currentCategory = 'all';
+                        currentTag = null;
+                    }
+                }
+                applyFilters();
+            });
         }
 
-        var pagination = document.querySelector('.pagination');
-        if (pagination) pagination.style.display = visible.length > 0 ? '' : 'none';
-        document.querySelector('.category-tabs').classList.toggle('category-filter-active', currentCategory !== 'all');
-        searchClear.style.display = keyword ? '' : 'none';
-    }
-
-    /* Override filterBy to track state */
-    var origFilterBy = filterBy;
-    filterBy = function(cat, tag) {
-        currentCategory = cat || 'all';
-        currentTag = tag || null;
-        applyFilters();
-        if (cat === 'all') {
-            updateTabsForCategory('all', null);
-        } else if (tag) {
-            updateTabsForCategory('云计算', tag);
-        } else {
-            updateTabsForCategory(cat, null);
+        // 清除搜索
+        if (searchClear) {
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.focus();
+                applyFilters();
+            });
         }
-    };
 
-    searchInput.addEventListener('input', function() {
-        if (this.value) {
-            var allTab = document.querySelector('.category-tabs > .tab[data-category="all"]');
-            if (allTab) allTab.classList.add('active');
-            tabs.forEach(function(t) { if (t !== allTab) t.classList.remove('active'); });
-        }
+        // 初始化
         applyFilters();
     });
-
-    searchClear.addEventListener('click', function() {
-        searchInput.value = '';
-        searchInput.focus();
-        applyFilters();
-    });
-
-    applyFilters();
+})();
 </script>
 {{ end }}
 
