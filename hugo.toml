@@ -71,12 +71,6 @@ hasCJKLanguage = true
     url = "/posts/"
     weight = 2
 
-  [[menu.main]]
-    identifier = "search"
-    name = "搜索"
-    url = "/search/"
-    weight = 3
-
 [taxonomies]
   category = "categories"
   tag = "tags"
