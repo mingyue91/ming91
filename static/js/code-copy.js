@@ -23,59 +23,63 @@
         }, 1800);
     }
 
-    function setupCodeCopy() {
-        var highlights = document.querySelectorAll('.article-content div.highlight');
-        var copyText = '复制';
-        var copiedText = '已复制';
+    function enhanceCopyButtons() {
+        if (!navigator.clipboard) return;
 
-        if (!navigator.clipboard) {
-            console.warn('Clipboard API not supported, copy button will not work.');
-            return;
-        }
+        var buttons = document.querySelectorAll('.copyCodeButton');
+        buttons.forEach(function(btn) {
+            if (btn.getAttribute('data-enhanced')) return;
 
-        highlights.forEach(function(highlight) {
-            if (highlight.querySelector('.copyCodeButton')) return;
+            var text = btn.textContent.trim();
 
-            var copyButton = document.createElement('button');
-            copyButton.innerHTML = copyIcon + '<span class="copy-text">' + copyText + '</span>';
-            copyButton.classList.add('copyCodeButton');
-            copyButton.setAttribute('aria-label', '复制代码');
-            highlight.appendChild(copyButton);
+            btn.innerHTML = copyIcon + '<span class="copy-text">' + text + '</span>';
+            btn.setAttribute('data-enhanced', 'true');
 
+            var newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+
+            var highlight = newBtn.closest('.highlight');
+            if (!highlight) return;
             var codeBlock = highlight.querySelector('code[data-lang]');
             if (!codeBlock) return;
 
-            copyButton.addEventListener('click', function() {
+            newBtn.addEventListener('click', function() {
                 var codeText = codeBlock.textContent || '';
 
                 navigator.clipboard.writeText(codeText)
                     .then(function() {
-                        copyButton.classList.add('copied');
-                        copyButton.innerHTML = checkIcon + '<span class="copy-text">' + copiedText + '</span>';
-                        copyButton.setAttribute('aria-label', '代码已复制');
-                        showToast('✅ ' + copiedText);
+                        newBtn.classList.add('copied');
+                        newBtn.innerHTML = checkIcon + '<span class="copy-text">已复制</span>';
+                        newBtn.setAttribute('aria-label', '代码已复制');
+                        showToast('✅ 已复制');
 
                         setTimeout(function() {
-                            copyButton.classList.remove('copied');
-                            copyButton.innerHTML = copyIcon + '<span class="copy-text">' + copyText + '</span>';
-                            copyButton.setAttribute('aria-label', '复制代码');
+                            newBtn.classList.remove('copied');
+                            newBtn.innerHTML = copyIcon + '<span class="copy-text">' + text + '</span>';
+                            newBtn.setAttribute('aria-label', '复制代码');
                         }, 2000);
                     })
                     .catch(function(err) {
                         console.error('复制失败:', err);
-                        copyButton.innerHTML = copyIcon + '<span class="copy-text">失败</span>';
+                        newBtn.innerHTML = copyIcon + '<span class="copy-text">失败</span>';
 
                         setTimeout(function() {
-                            copyButton.innerHTML = copyIcon + '<span class="copy-text">' + copyText + '</span>';
+                            newBtn.innerHTML = copyIcon + '<span class="copy-text">' + text + '</span>';
                         }, 1500);
                     });
             });
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupCodeCopy);
-    } else {
-        setupCodeCopy();
+    function init() {
+        if (document.readyState === 'complete') {
+            setTimeout(enhanceCopyButtons, 50);
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(enhanceCopyButtons, 50);
+            });
+        }
     }
+
+    init();
 })();
