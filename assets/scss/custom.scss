@@ -304,6 +304,34 @@
     50% { transform: translateY(-4px); }
 }
 
+.copy-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--card-background);
+    color: var(--card-text-color-main);
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--card-separator-color);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+
+    &.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    [data-scheme="dark"] & {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+}
+
 .article-content div.highlight {
     position: relative;
 }
