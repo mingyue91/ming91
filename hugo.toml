@@ -1,10 +1,10 @@
 baseURL = "https://mingyue91.github.io/ming91/"
-locale = "zh-cn"
+locale = "zh"
 title = "min9's Blog"
 theme = "stack"
 
 paginate = 10
-defaultContentLanguage = "zh-cn"
+defaultContentLanguage = "zh"
 enableEmoji = true
 hasCJKLanguage = true
 

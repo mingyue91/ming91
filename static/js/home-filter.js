@@ -158,7 +158,8 @@
 
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && this.value.trim()) {
-                    window.location.href = './search/?keyword=' + encodeURIComponent(this.value.trim());
+                    var base = (typeof window.searchURL !== 'undefined') ? window.searchURL : './search/';
+                    window.location.href = base + '?keyword=' + encodeURIComponent(this.value.trim());
                 }
             });
         }

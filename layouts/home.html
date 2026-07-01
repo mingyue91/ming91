@@ -42,7 +42,8 @@
     <a href="https://gal.saop.cc/" target="_blank" rel="noopener">gal.saop.cc</a>
 </div>
 
-<script src="/js/home-filter.js" defer></script>
+<script>window.searchURL = '{{ "search/" | relURL | safeJS }}';</script>
+<script src="{{ "js/home-filter.js" | relURL }}" defer></script>
 {{ end }}
 
 {{ define "right-sidebar" }}
