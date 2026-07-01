@@ -3,12 +3,48 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         var tabs = document.querySelectorAll('.category-tabs > .tab, .category-tabs .dropbtn');
-        var dropdownItems = document.querySelectorAll('.dropdown-content a');
         var articles = document.querySelectorAll('.article-list .card');
         var searchInput = document.getElementById('search-input');
         var searchClear = document.getElementById('search-clear');
+        var pagination = document.querySelector('.pagination');
         var currentCategory = 'all';
         var currentTag = null;
+
+        function getDropdown(cat) {
+            var drop = document.getElementById('subdrop-' + cat);
+            if (drop) return drop;
+            var parent = document.querySelector('.tab-dropdown .dropbtn[data-category="' + cat + '"]');
+            return parent ? parent.parentNode.querySelector('.dropdown-content') : null;
+        }
+
+        function buildSubcategories(cat) {
+            var drop = getDropdown(cat);
+            if (!drop) return;
+            var tagSet = {};
+            articles.forEach(function(a) {
+                if (a.getAttribute('data-category') === cat) {
+                    (a.getAttribute('data-tags') || '').split(',').forEach(function(t) {
+                        var tag = t.trim();
+                        if (tag) tagSet[tag] = true;
+                    });
+                }
+            });
+            var tags = Object.keys(tagSet).sort();
+            drop.innerHTML = '';
+            tags.forEach(function(tag) {
+                var a = document.createElement('a');
+                a.setAttribute('data-tag', tag);
+                a.textContent = tag;
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    drop.classList.remove('show');
+                    currentTag = this.getAttribute('data-tag');
+                    filterBy(cat, currentTag);
+                });
+                drop.appendChild(a);
+            });
+        }
 
         function filterBy(category, tag) {
             currentCategory = category || 'all';
@@ -17,19 +53,17 @@
             tabs.forEach(function(t) { t.classList.remove('active'); });
             document.querySelector('.category-tabs').classList.toggle('category-filter-active', currentCategory !== 'all');
             
-            var dropActive = document.querySelector('.dropdown-content a.active');
-            if (dropActive) dropActive.classList.remove('active');
+            var drops = document.querySelectorAll('.dropdown-content a.active');
+            drops.forEach(function(d) { d.classList.remove('active'); });
 
             if (currentCategory === 'all') {
                 var allBtn = document.querySelector('.category-tabs > .tab[data-category="all"]');
                 if (allBtn) allBtn.classList.add('active');
             } else if (currentTag) {
-                var dropBtn = document.querySelector('.dropbtn');
+                var dropBtn = document.querySelector('.dropbtn[data-category="' + currentCategory + '"]');
                 if (dropBtn) {
                     dropBtn.classList.add('active');
-                    var activeItem = Array.from(dropdownItems).find(function(item) { 
-                        return item.getAttribute('data-category') === currentTag; 
-                    });
+                    var activeItem = dropBtn.parentNode.querySelector('.dropdown-content a[data-tag="' + currentTag + '"]');
                     if (activeItem) activeItem.classList.add('active');
                 }
             } else {
@@ -54,8 +88,8 @@
                 if (currentCategory === 'all') {
                     catMatch = true;
                 } else if (currentTag) {
-                    var articleTags = article.getAttribute('data-tags') || '';
-                    catMatch = articleTags.indexOf(currentTag) !== -1;
+                    var articleTags = (article.getAttribute('data-tags') || '').split(',').map(function(t) { return t.trim(); });
+                    catMatch = article.getAttribute('data-category') === currentCategory && articleTags.indexOf(currentTag) !== -1;
                 } else {
                     catMatch = article.getAttribute('data-category') === currentCategory;
                 }
@@ -81,40 +115,31 @@
                 rest.forEach(function(a) { list.appendChild(a); });
             }
 
-            var pagination = document.querySelector('.pagination');
-            if (pagination) pagination.style.display = visible.length > 0 ? '' : 'none';
+            if (pagination) {
+                pagination.style.display = visible.length > 0 && currentCategory === 'all' && !keyword ? '' : 'none';
+            }
             if (searchClear) searchClear.style.display = keyword ? '' : 'none';
         }
 
         tabs.forEach(function(tab) {
             tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                document.querySelector('.dropdown-content')?.classList.remove('show');
-                filterBy(this.getAttribute('data-category'), null);
+                var cat = this.getAttribute('data-category');
+                document.querySelectorAll('.dropdown-content.show').forEach(function(d) { d.classList.remove('show'); });
+                if (this.classList.contains('dropbtn')) {
+                    var drop = this.parentNode.querySelector('.dropdown-content');
+                    if (drop) {
+                        buildSubcategories(cat);
+                        drop.classList.toggle('show');
+                    }
+                    e.stopPropagation();
+                } else {
+                    filterBy(cat, null);
+                }
             });
         });
-
-        dropdownItems.forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                document.querySelector('.dropdown-content')?.classList.remove('show');
-                var tag = this.getAttribute('data-category');
-                filterBy('云计算', tag);
-            });
-        });
-
-        var dropbtn = document.querySelector('.dropbtn');
-        if (dropbtn) {
-            dropbtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.querySelector('.dropdown-content')?.classList.toggle('show');
-            });
-        }
 
         document.addEventListener('click', function() {
-            document.querySelector('.dropdown-content')?.classList.remove('show');
+            document.querySelectorAll('.dropdown-content.show').forEach(function(d) { d.classList.remove('show'); });
         });
 
         if (searchInput) {
@@ -146,6 +171,7 @@
             });
         }
 
+        buildSubcategories('云计算');
         applyFilters();
     });
 })();

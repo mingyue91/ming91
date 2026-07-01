@@ -9,22 +9,16 @@
 
 <div class="category-tabs">
     <button class="tab active" data-category="all">全部</button>
-    <div class="tab-dropdown">
-        <button class="tab dropbtn" data-category="云计算">云计算 ▾</button>
-        <div class="dropdown-content">
-            <a data-category="计算">计算</a>
-            <a data-category="存储">存储</a>
-            <a data-category="网络">网络</a>
-            <a data-category="安全">安全</a>
-            <a data-category="数据库">数据库</a>
-            <a data-category="无服务器">无服务器</a>
-            <a data-category="数据分析">数据分析</a>
+    {{- range $name, $taxonomy := .Site.Taxonomies.categories -}}
+        {{- if eq $name "云计算" }}
+        <div class="tab-dropdown">
+            <button class="tab dropbtn" data-category="云计算">{{ $taxonomy.Page.Title | default $name }} ▾</button>
+            <div class="dropdown-content" id="subdrop-云计算"></div>
         </div>
-    </div>
-    <button class="tab" data-category="后端">后端</button>
-    <button class="tab" data-category="AI">AI</button>
-    <button class="tab" data-category="容器Docker">容器Docker</button>
-    <button class="tab" data-category="其他">其他</button>
+        {{- else }}
+        <button class="tab" data-category="{{ $name }}">{{ $taxonomy.Page.Title | default $name }}</button>
+        {{- end -}}
+    {{- end -}}
 </div>
 
 {{- $paginator := partial "helper/paginator.html" . -}}
@@ -33,7 +27,7 @@
     {{ range $index, $element := $paginator.Pages }}
         {{ $cat := index .Params.categories 0 | default "其他" }}
         {{ $pinned := .Params.pinned | default false }}
-        <article class="card" data-category="{{ $cat }}" data-tags="{{ delimit .Params.tags "," }}"{{ if $pinned }} data-pinned="true"{{ end }}>
+        <article class="card" data-category="{{ $cat | lower }}" data-tags="{{ delimit .Params.tags "," }}"{{ if $pinned }} data-pinned="true"{{ end }}>
             {{ partial "article-list/default" . }}
         </article>
     {{ end }}
