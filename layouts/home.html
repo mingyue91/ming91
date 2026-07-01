@@ -7,17 +7,21 @@
     <button type="button" id="search-clear" class="search-clear" style="display:none">&times;</button>
 </div>
 
+{{- $allArticles := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+<script>
+window.__articles = [
+{{- range $allArticles -}}
+  {{- $cat := index .Params.categories 0 | default "其他" -}}
+  {category:{{ $cat | lower | jsonify | safeJS }}, pinned:{{ default false .Params.pinned }}},
+{{- end -}}
+];
+window.searchURL = '{{ "search/" | relURL | safeJS }}';
+</script>
+
 <div class="category-tabs">
     <button class="tab active" data-category="all">全部</button>
     {{- range $name, $taxonomy := .Site.Taxonomies.categories -}}
-        {{- if eq $name "云计算" }}
-        <div class="tab-dropdown">
-            <button class="tab dropbtn" data-category="云计算">{{ $taxonomy.Page.Title | default $name }} ▾</button>
-            <div class="dropdown-content" id="subdrop-云计算"></div>
-        </div>
-        {{- else }}
-        <button class="tab" data-category="{{ $name }}">{{ $taxonomy.Page.Title | default $name }}</button>
-        {{- end -}}
+    <button class="tab" data-category="{{ $name | lower }}">{{ $taxonomy.Page.Title | default $name }}</button>
     {{- end -}}
 </div>
 
@@ -42,7 +46,6 @@
     <a href="https://gal.saop.cc/" target="_blank" rel="noopener">gal.saop.cc</a>
 </div>
 
-<script>window.searchURL = '{{ "search/" | relURL | safeJS }}';</script>
 <script src="{{ "js/home-filter.js" | relURL }}" defer></script>
 {{ end }}
 
