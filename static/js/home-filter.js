@@ -130,6 +130,12 @@
                 }
                 applyFilters();
             });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    window.location.href = './search/?keyword=' + encodeURIComponent(this.value.trim());
+                }
+            });
         }
 
         if (searchClear) {
