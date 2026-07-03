@@ -32,7 +32,7 @@ content/posts/
 ├── docker-storage-network.md         # 2026-05-27 | 容器Docker
 └── docker-compose-commands.md        # 2026-05-27 | 容器Docker
 ```
-共 16 篇文章，主要分类：`云计算`(8), `容器Docker`(7), `其他`(1)
+共 17 篇文章，主要分类：`云计算`(8), `容器Docker`(7), `python`(1), `其他`(1)
 
 ## 文章 Front Matter 规范
 ```yaml
@@ -52,6 +52,7 @@ draft: false
 |------|----------|
 | 云计算 | aws, cloud, s3, iam, ec2, 存储, 安全, 数据库, 入门 |
 | 容器Docker | docker, 容器, dockerfile, linux, 权限, 入门, 进阶, 运维, compose, volume, 网络, 镜像 |
+| python | python, 入门 |
 | 其他 | blog, hello |
 
 ## 自定义功能

@@ -3,3 +3,4 @@
 /public/
 node_modules/
 *.log
+.github/config/github_token
