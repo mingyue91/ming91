@@ -11,6 +11,7 @@
   }
 
   var filename = btn.getAttribute('data-filename') || 'article.pdf';
+  var libUrl = btn.getAttribute('data-lib') || '/js/html2pdf.bundle.min.js';
   var isHtml2PdfLoaded = false;
   var html2PdfLoadPromise = null;
 
@@ -25,7 +26,7 @@
 
     html2PdfLoadPromise = new Promise(function(resolve, reject) {
       var script = document.createElement('script');
-      script.src = '/js/html2pdf.bundle.min.js';
+      script.src = libUrl;
       script.onload = function() {
         isHtml2PdfLoaded = true;
         resolve();

@@ -1,8 +1,0 @@
-{{- $script := resources.Get "ts/main.ts" | js.Build "ts" | minify | fingerprint -}}
-<script type="module" src="{{ $script.RelPermalink }}" defer></script>
-
-{{- $codeCopyScript := resources.Get "ts/code-copy.ts" | js.Build "ts" | minify | fingerprint -}}
-<script type="module" src="{{ $codeCopyScript.RelPermalink }}" defer></script>
-
-<script src="{{ "js/code-copy.js" | relURL }}" defer></script>
-<script src="{{ "js/pdf-export.js" | relURL }}" defer></script>

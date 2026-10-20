@@ -24,8 +24,6 @@ hasCJKLanguage = true
   [params.footer]
     since = 2026
 
-  favicon = "/avatar.jpg"
-
   [params.opengraph.twitter]
     site = "mingyue91"
     card = "summary_large_image"
@@ -38,7 +36,11 @@ hasCJKLanguage = true
     subtitle = "二次元 & 技术"
 
   [params.widgets]
-    enabled = ["recent_posts", "tag_cloud", "archives"]
+    homepage = [
+      { type = "categories", params = { limit = 10 } },
+      { type = "tag-cloud", params = { limit = 10 } },
+    ]
+    page = [{ type = "toc" }]
 
   [params.color]
     scheme = "auto"
