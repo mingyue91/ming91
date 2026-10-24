@@ -1,3 +1,13 @@
-<link rel="shortcut icon" href="{{ "avatar.jpg" | relURL }}">
+<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+{{- if not .Params.image }}
+<meta property="og:image" content="{{ "og-default.jpg" | absURL }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ site.Title }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ "og-default.jpg" | absURL }}">
+<meta name="twitter:image:alt" content="{{ site.Title }}">
+{{- end }}
 <script src="{{ "js/code-copy.js" | relURL }}" defer></script>
 <script src="{{ "js/pdf-export.js" | relURL }}" defer></script>

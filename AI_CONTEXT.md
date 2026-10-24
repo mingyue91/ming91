@@ -24,7 +24,10 @@
 │   ├── icons/copy.svg
 │   └── jsconfig.json          # TS 路径别名指向主题 assets
 ├── static/
-│   ├── avatar.jpg
+│   ├── avatar.jpg             # 400px 压缩版，侧边栏头像
+│   ├── favicon.ico            # 16/32/48 多尺寸
+│   ├── apple-touch-icon.png   # 180px
+│   ├── og-default.jpg         # 1200×630 默认分享卡片
 │   └── js/                    # home-filter / code-copy / pdf-export / html2pdf.bundle
 ├── themes/stack/              # 主题子模块（勿手改，升级用 git submodule update）
 ├── .github/workflows/deploy.yml
@@ -99,7 +102,9 @@ draft: false
 | 文章页覆盖（桌面端 TOC 侧栏） | `layouts/_partials/article/article.html` |
 | 文章底部**「导出 PDF」**按钮（本地 html2pdf，零 CDN；失败降级 `window.print()`）+ 配套 `@media print` 样式 | `layouts/_partials/article/components/footer.html`、`static/js/pdf-export.js`、`static/js/html2pdf.bundle.min.js`、`assets/scss/custom.scss` |
 | **代码块复制按钮**（SVG 图标 + Toast 提示） | `static/js/code-copy.js`、`assets/icons/copy.svg`、`assets/scss/custom.scss` |
-| 全局脚本/Favicon 注入 | `layouts/_partials/head/custom.html` |
+| 全局脚本注入（代码复制 / PDF 导出） | `layouts/_partials/head/custom.html` |
+| 图标与默认社交卡片：favicon(16/32/48)、apple-touch-icon(180)、og:image(1200×630) | `layouts/_partials/head/custom.html`、`static/favicon.ico`、`static/apple-touch-icon.png`、`static/og-default.jpg` |
+| RSS 只输出摘要；tag/category 不再各自生成 RSS | `layouts/rss.xml`、`hugo.toml`（`[services.rss] limit = 10`、`[outputs] term = ["HTML"]`） |
 | 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
 | 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、移动端适配） | `assets/scss/custom.scss`（446 行） |
 
@@ -121,20 +126,25 @@ git add .; git commit -m "msg"; git push
 ## 已知问题 / 注意事项
 
 1. **Hugo 0.161.0 的 `--minify` 有 bug**，构建只用 `hugo`，CI 里也是不带 minify 的。
-2. **本机目录权限**：`D:\git库\ming91` 的所有者是 `Administrators`，当前用户没有「更改权限」权限，导致 DSH 沙盒无法给工作区授权写入（报 `grantWrite(...)` 失败）。需在**管理员** PowerShell 里执行一次：
-   ```powershell
-   icacls "D:\git库\ming91" /grant "${env:USERNAME}:(OI)(CI)F" /T
-   ```
-   注意必须写成 `"${env:USERNAME}:..."`（花括号），写成 `"$env:USERNAME:..."` 时 PowerShell 会把变量名连冒号一起解析，结果只剩 `(OI)(CI)F` 传给 icacls，报「无效参数」。
+2. **中文 `.Summary` 陷阱**：Hugo 按空格分词，中文整段算一个"词"，`.Summary` 会退化成全文（修复前 RSS 单条达 26,000 字符）。生成 RSS/摘要一律用 `description` 或 `| truncate`，别直接用 `.Summary`。
 3. **凭据**：`.git/config` 的 remote URL 里内嵌了明文 GitHub token；`.github/config/github_token` 也存了一份（已 gitignore）。建议 `git remote set-url origin https://github.com/mingyue91/ming91.git`，token 只留在被忽略的文件里；如果该目录曾外传，去 GitHub 吊销重建。
 4. `layouts/home.html` 里生成的 `window.__articles` 数组前端没有用到（`window.searchURL` 有用），属于遗留代码，可删。
-5. 根目录 `2abd9be97317adcd.webp`（7.5KB）未被任何页面引用，疑似上传残留。
-6. `task-site/` 是 Qoder 建站工具留下的占位站点（`dist/index.html` + `.任务站点.qoder.site`），未纳入 git，与博客无关，可删。
-7. `i18n/` 为空目录。
-8. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
+5. `i18n/` 为空目录。
+6. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
+
+## 已修复（留档）
+
+- **目录权限（2026-10-24）**：`D:\git库\ming91` 曾属于 `Administrators` 且当前用户无「更改权限」，导致 DSH 沙盒报 `grantWrite(...)` 失败。已用管理员 PowerShell 修正：
+  ```powershell
+  icacls "D:\git库\ming91" /reset
+  icacls "D:\git库\ming91" /grant "*S-1-5-21-1705561848-4019212562-1595756290-1001:(OI)(CI)F"
+  ```
+  坑：写成 `"${env:USERNAME}:(OI)(CI)F"` 要带花括号；写成 `"$env:USERNAME:..."` 时 PowerShell 会把冒号并入变量名，只剩 `(OI)(CI)F` 传给 icacls，报「无效参数」。
+- 根目录孤立图片 `2abd9be97317adcd.webp`、Qoder 占位站点 `task-site/` 已于 2026-10-24 删除。
 
 ## 更新记录
 
+- **2026-10-24（批次 A：性能与分享）**：RSS 改为只输出摘要（4.6 MB → 27 KB，52 个源 → 6 个）；头像 421 KB → 48 KB；新增 favicon / apple-touch-icon / 1200×630 默认 og:image。
 - **2026-10-24**：重写本文件，校准为实际状态（24 篇 / 分类统计 / 自定义功能与文件对应关系 / 已知问题）。
 - **2026-07-27**：新增 `aws-alb-intro.md`。
 - **2026-07-03**：新增 `python-list-comprehension.md`；修复脚本加载、Favicon、Widgets 与 PDF 导出问题（`a5752f4`）。
