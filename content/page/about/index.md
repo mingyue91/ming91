@@ -11,17 +11,11 @@ slug: "about"
 
 写下来的初衷很简单：**看一遍不如写一遍**。把踩过的坑整理成能回查的东西，如果有人正好搜到，也算没白写。
 
-## 写了些什么
-
-- **云计算**：AWS 入门到常用服务，IAM 策略、S3 存储、RDS / DynamoDB、ALB
-- **容器**：Docker 从入门到实战，Dockerfile、镜像与容器命令、存储与网络、Compose、MySQL 部署
-- **编程与工具**：Python 笔记、OpenCode 之类的效率工具
-
 全部文章可以看[归档](/archives/)，或者用首页的分类和搜索筛选。
 
 ## 关于我
 
-二次元 & 技术。目前的精力主要在云平台和容器化上，偶尔折腾点自动化，顺手把过程记下来。
+二次元 & 技术。现在正在备考 **AWS Certified Solutions Architect – Associate（SAA）**，日常精力主要花在云平台和容器化上，偶尔折腾点自动化，顺手把过程记下来。
 
 - GitHub：[@mingyue91](https://github.com/mingyue91)
 - 订阅：[RSS](/index.xml)
