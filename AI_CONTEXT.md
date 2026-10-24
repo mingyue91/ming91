@@ -1,96 +1,143 @@
 # AI Context — min9's Blog
 
+> 给 AI 助手（和未来的自己）看的项目速查。最后更新：2026-10-24。
+
 ## 项目概况
-- Hugo v0.161.0 静态博客，主题 [hugo-theme-stack v4](https://github.com/CaiJimmy/hugo-theme-stack)
-- 部署：GitHub Pages + GitHub Actions（`.github/workflows/deploy.yml`）
-- 地址：https://mingyue91.github.io/ming91/
-- 作者：min9 (mingyue91)
-- 语言：zh-cn
 
-## Git 配置
-- 远程仓库：`git@github.com:mingyue91/ming91.git`（SSH）
-- 默认分支：`main`
-- 推送即触发 GitHub Actions 自动构建部署
+- **Hugo v0.161.0（extended）** 静态博客，主题 [hugo-theme-stack](https://github.com/CaiJimmy/hugo-theme-stack) **v4.0.2**（Git submodule，位于 `themes/stack`）
+- 线上地址：https://mingyue91.github.io/ming91/
+- 仓库：`git@github.com:mingyue91/ming91.git`（本地 remote 目前是带 token 的 HTTPS 形式），默认分支 `main`
+- 部署：push 到 `main` → GitHub Actions 构建 → GitHub Pages
+- 作者：min9 (mingyue91)｜语言：zh-cn｜每页 10 篇
 
-## 内容结构
+## 目录速览
+
 ```
-content/posts/
-├── hello-world.md                    # 2026-05-18 | 其他
-├── cloud-intro.md                    # 2026-05-17 | 云计算
-├── aws-iam-intro.md                  # 2026-05-18 | 云计算
-├── aws-iam-policy.md                 # 2026-05-18 | 云计算
-├── aws-s3-policy-examples.md         # 2026-05-18 | 云计算
-├── docker-intro.md                   # 2026-05-19 | 容器Docker
-├── aws-2026-updates.md               # 2026-05-22 | 云计算
-├── aws-database-rds-dynamodb.md      # 2026-05-22 | 云计算
-├── aws-s3-intro.md                   # 2026-05-22 | 云计算
-├── aws-storage-overview.md           # 2026-05-22 | 云计算（置顶）
-├── docker-add-user-to-group.md       # 2026-05-25 | 容器Docker
-├── dockerfile-reference.md           # 2026-05-27 | 容器Docker
-├── docker-container-commands.md      # 2026-05-27 | 容器Docker
-├── docker-image-commands.md          # 2026-05-27 | 容器Docker
-├── docker-storage-network.md         # 2026-05-27 | 容器Docker
-└── docker-compose-commands.md        # 2026-05-27 | 容器Docker
+.
+├── hugo.toml                  # 站点配置：菜单、侧边栏、组件、分类法
+├── content/
+│   ├── posts/                 # 24 篇文章
+│   └── page/search/           # 搜索页（输出 html + json）
+├── layouts/                   # 覆盖主题的模板（首页 / 404 / 卡片 / 侧边栏 / PDF 按钮）
+├── assets/
+│   ├── scss/custom.scss       # 446 行定制样式
+│   ├── icons/copy.svg
+│   └── jsconfig.json          # TS 路径别名指向主题 assets
+├── static/
+│   ├── avatar.jpg
+│   └── js/                    # home-filter / code-copy / pdf-export / html2pdf.bundle
+├── themes/stack/              # 主题子模块（勿手改，升级用 git submodule update）
+├── .github/workflows/deploy.yml
+└── public/                    # 构建产物（gitignore）
 ```
-共 17 篇文章，主要分类：`云计算`(8), `容器Docker`(7), `python`(1), `其他`(1)
 
-## 文章 Front Matter 规范
+## 内容结构（24 篇，2026-05-17 ~ 2026-07-27）
+
+| 文件 | 日期 | 分类 | 标题 |
+|---|---|---|---|
+| `aws-alb-intro.md` | 2026-07-27 | 云计算 | AWS ALB 入门：应用负载均衡器核心架构指南 |
+| `python-list-comprehension.md` | 2026-07-03 | python | Python 列表推导式详解 |
+| `dockerfile-basics.md` | 2026-06-10 | 容器Docker | Dockerfile 基础概念、用法与扩展 |
+| `docker-run-parameters.md` | 2026-06-08 | 容器Docker | Docker run 启动参数详解 |
+| `dockerfile-reference.md` | 2026-05-27 | 容器Docker | Dockerfile 指令详解 |
+| `docker-container-commands.md` | 2026-05-27 | 容器Docker | Docker 容器管理命令详解 |
+| `docker-image-commands.md` | 2026-05-27 | 容器Docker | Docker 镜像管理命令详解 |
+| `docker-storage-network.md` | 2026-05-27 | 容器Docker | Docker 存储与网络命令详解 |
+| `docker-compose-commands.md` | 2026-05-27 | 容器Docker | Docker Compose 命令详解 |
+| `docker-advanced-usage.md` | 2026-05-26 | 容器Docker | Docker 高级用法：入门之后该学什么 |
+| `docker-volume-bind-mount.md` | 2026-05-26 | 容器Docker | Docker 数据持久化：Volume 与 Bind Mount 实战 |
+| `docker-add-user-to-group.md` | 2026-05-25 | 容器Docker | 如何将当前用户添加到 Docker 组？ |
+| `docker-mysql-deploy.md` | 2026-05-25 | 容器Docker | Docker 部署 MySQL 完整指南 |
+| `opencode-github-push.md` | 2026-05-25 | 其他 | 如何使用 OpenCode 连接 GitHub 仓库并完成推送 |
+| `aws-2026-updates.md` | 2026-05-22 | 云计算 | AWS 2026 年度更新汇总（截至 5 月） |
+| `aws-database-rds-dynamodb.md` | 2026-05-22 | 云计算 | AWS 数据库服务详解：RDS 与 DynamoDB |
+| `aws-s3-intro.md` | 2026-05-22 | 云计算 | Amazon S3 入门：对象存储基础 |
+| `aws-storage-overview.md` | 2026-05-22 | 云计算 | AWS 存储服务全景（**置顶** `pinned: true`） |
+| `docker-intro.md` | 2026-05-19 | 容器Docker | Docker 入门：从零理解容器化技术 |
+| `aws-iam-intro.md` | 2026-05-18 | 云计算 | AWS IAM 入门：身份与访问管理基础 |
+| `aws-iam-policy.md` | 2026-05-18 | 云计算 | AWS IAM 策略完全指南 |
+| `aws-s3-policy-examples.md` | 2026-05-18 | 云计算 | Amazon S3 策略示例：从入门到进阶 |
+| `hello-world.md` | 2026-05-18 | 其他 | Hello World |
+| `cloud-intro.md` | 2026-05-17 | 云计算 | 云计算入门 |
+
+统计：`云计算` 9 篇 ｜ `容器Docker` 12 篇 ｜ `python` 1 篇 ｜ `其他` 2 篇
+
+## Front Matter 规范
+
 ```yaml
 ---
 title: "文章标题"
-description: "摘要"
-date: 2026-05-25T00:00:00+08:00
+description: "摘要（会显示在卡片副标题上）"
+date: 2026-07-27T00:00:00+08:00
 slug: kebab-case-name
-categories: ["分类名"]
-tags: ["标签1", "标签2"]
+categories: ["容器Docker"]      # 单分类，取第一个作为卡片分类
+tags: ["docker", "入门"]
+pinned: true                    # 可选，置顶到列表最前
 draft: false
 ---
 ```
 
 ## 分类与标签
-| 分类 | 常用标签 |
-|------|----------|
-| 云计算 | aws, cloud, s3, iam, ec2, 存储, 安全, 数据库, 入门 |
-| 容器Docker | docker, 容器, dockerfile, linux, 权限, 入门, 进阶, 运维, compose, volume, 网络, 镜像 |
-| python | python, 入门 |
-| 其他 | blog, hello |
 
-## 自定义功能
-- **首页分类筛选**：`layouts/home.html` — 纯 JS 实现分类 Tab 切换（全部/云计算/后端/AI/容器Docker/其他），云计算有子分类下拉
-- **自定义 404**：`layouts/404.html` — 萌系报错 + 搜索框
-- **自定义侧边栏**：`layouts/_partials/sidebar/left.html`
-- **文章卡片样式**：`layouts/_partials/article/components/details.html`
-- **自定义 CSS**：`assets/scss/custom.scss` — 分类 Tab、卡片 hover 效果、置顶标记
+| 分类 | 实际使用的标签 |
+|---|---|
+| 云计算 | aws, cloud, s3, iam, alb, rds, dynamodb, ebs, efs, 存储, 安全, security, 数据库, 负载均衡, 网络, 入门, 2026, 汇总, 更新 |
+| 容器Docker | docker, 容器, dockerfile, compose, volume, bind-mount, 网络, 镜像, mysql, 数据库, 部署, run, 参数, 数据持久化, linux, 权限, sudo, 入门, 进阶 |
+| python | python, 入门 |
+| 其他 | blog, hello, opencode, git, github, ai, 工具 |
+
+## 自定义功能（相对原主题的改动）
+
+| 功能 | 相关文件 |
+|---|---|
+| **首页搜索框 + 分类 Tab**（分类由 `.Site.Taxonomies.categories` 自动生成） | `layouts/home.html`、`static/js/home-filter.js`、`assets/scss/custom.scss` |
+| 客户端筛选：分类 + 标题/摘要/标签关键词实时过滤，置顶优先，筛选时隐藏分页 | `static/js/home-filter.js` |
+| **独立搜索页**（Hugo 输出 `search/index.json`，前端 `search.tsx` 检索） | `content/page/search/index.md`（`outputs: html + json`）、`layouts/page/search.html` |
+| **萌系 404** + 搜索框回退 | `layouts/404.html` |
+| 侧边栏覆盖（头像/菜单/主题切换/语言切换） | `layouts/_partials/sidebar/left.html` |
+| 文章卡片覆盖（更新徽章、分类色块、标签） | `layouts/_partials/article/components/details.html` |
+| 文章页覆盖（桌面端 TOC 侧栏） | `layouts/_partials/article/article.html` |
+| 文章底部**「导出 PDF」**按钮（本地 html2pdf，零 CDN；失败降级 `window.print()`）+ 配套 `@media print` 样式 | `layouts/_partials/article/components/footer.html`、`static/js/pdf-export.js`、`static/js/html2pdf.bundle.min.js`、`assets/scss/custom.scss` |
+| **代码块复制按钮**（SVG 图标 + Toast 提示） | `static/js/code-copy.js`、`assets/icons/copy.svg`、`assets/scss/custom.scss` |
+| 全局脚本/Favicon 注入 | `layouts/_partials/head/custom.html` |
+| 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
+| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、移动端适配） | `assets/scss/custom.scss`（446 行） |
+
+`hugo.toml` 中的关键参数：`paginate = 10`、侧边栏头像 `/avatar.jpg`、副标题「二次元 & 技术」、首页组件 `categories` + `tag-cloud`（各 10 条）、文章页组件 `toc`、配色 `scheme = "auto"`。
+
+## 部署
+
+`.github/workflows/deploy.yml`：push `main`（或手动 dispatch）→ checkout（`submodules: recursive`）→ `peaceiris/actions-hugo@v3`（0.161.0 extended）→ `hugo` → `actions/upload-pages-artifact@v3`（`./public`）→ `actions/deploy-pages@v4`。
 
 ## 常用命令
+
 ```powershell
-hugo server --buildDrafts          # 本地预览（含草稿）
-hugo server                         # 本地预览（仅发布）
-hugo --minify                       # 生产构建
-git add .; git commit -m "msg"; git push  # 发布
+hugo server --buildDrafts      # 本地预览（含草稿）
+hugo server                    # 本地预览（仅发布）
+hugo                           # 生产构建（不要加 --minify，见下）
+git add .; git commit -m "msg"; git push
 ```
 
-## 安全注意事项
-- 不提交 `.env`、密钥、token
-- 不在代码中硬编码凭据
+## 已知问题 / 注意事项
 
-## 上次会话（2026-05-27）
-- 新增 5 篇 Docker 命令系列文章：
-  - `dockerfile-reference.md` — Dockerfile 全部 17 个指令详解
-  - `docker-container-commands.md` — 容器生命周期管理（create/run/stop/exec/logs/cp/inspect 等 22 个命令）
-  - `docker-image-commands.md` — 镜像管理（pull/push/build/tag/save/load/history 等 13 个命令）
-  - `docker-storage-network.md` — volume、network、system 三大子系统
-  - `docker-compose-commands.md` — Compose V2 全部子命令
-- 新增文章导出 PDF 功能
-  - 每篇文章底部添加"导出 PDF"按钮
-  - 使用本地托管 html2pdf.bundle.min.js（零 CDN 依赖）
-  - html2pdf 失败自动降级到浏览器 `window.print()`
-  - `@media print` 打印样式隐藏侧边栏、导航等无关元素
-- 新文件：
-  - `static/js/html2pdf.bundle.min.js`
-  - `static/js/pdf-export.js`
-  - `layouts/_partials/article/article.html`（覆盖主题，添加按钮）
-- 修改文件：
-  - `assets/scss/custom.scss`（PDF 按钮样式 + 打印样式）
-  - `themes/stack/layouts/_partials/head/custom.html`（引入脚本）
-- 注意：Hugo v0.161.0 `--minify` 有 bug，不可用
+1. **Hugo 0.161.0 的 `--minify` 有 bug**，构建只用 `hugo`，CI 里也是不带 minify 的。
+2. **本机目录权限**：`D:\git库\ming91` 的所有者是 `Administrators`，当前用户没有「更改权限」权限，导致 DSH 沙盒无法给工作区授权写入（报 `grantWrite(...)` 失败）。需在**管理员** PowerShell 里执行一次：
+   ```powershell
+   icacls "D:\git库\ming91" /grant "${env:USERNAME}:(OI)(CI)F" /T
+   ```
+   注意必须写成 `"${env:USERNAME}:..."`（花括号），写成 `"$env:USERNAME:..."` 时 PowerShell 会把变量名连冒号一起解析，结果只剩 `(OI)(CI)F` 传给 icacls，报「无效参数」。
+3. **凭据**：`.git/config` 的 remote URL 里内嵌了明文 GitHub token；`.github/config/github_token` 也存了一份（已 gitignore）。建议 `git remote set-url origin https://github.com/mingyue91/ming91.git`，token 只留在被忽略的文件里；如果该目录曾外传，去 GitHub 吊销重建。
+4. `layouts/home.html` 里生成的 `window.__articles` 数组前端没有用到（`window.searchURL` 有用），属于遗留代码，可删。
+5. 根目录 `2abd9be97317adcd.webp`（7.5KB）未被任何页面引用，疑似上传残留。
+6. `task-site/` 是 Qoder 建站工具留下的占位站点（`dist/index.html` + `.任务站点.qoder.site`），未纳入 git，与博客无关，可删。
+7. `i18n/` 为空目录。
+8. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
+
+## 更新记录
+
+- **2026-10-24**：重写本文件，校准为实际状态（24 篇 / 分类统计 / 自定义功能与文件对应关系 / 已知问题）。
+- **2026-07-27**：新增 `aws-alb-intro.md`。
+- **2026-07-03**：新增 `python-list-comprehension.md`；修复脚本加载、Favicon、Widgets 与 PDF 导出问题（`a5752f4`）。
+- **2026-06-10**：新增 `dockerfile-basics.md`。
+- **2026-06-08**：新增 `docker-run-parameters.md`。
+- **2026-05-27**：新增 5 篇 Docker 命令系列 + 文章导出 PDF 功能（`static/js/html2pdf.bundle.min.js`、`static/js/pdf-export.js`、`assets/scss/custom.scss` 打印样式）。
