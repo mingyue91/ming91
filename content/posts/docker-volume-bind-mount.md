@@ -3,9 +3,11 @@ title: "Docker 数据持久化：Volume 与 Bind Mount 实战"
 description: "通过一个实验搞懂两种挂载方式的区别"
 date: 2026-05-26T00:00:00+08:00
 slug: docker-volume-bind-mount
-categories: ["容器Docker"]
-tags: ["docker", "volume", "bind-mount", "数据持久化", "入门"]
+categories: ["容器技术"]
+tags: ["volume", "bind-mount", "数据持久化"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 9
 ---
 
 ## 实验目标

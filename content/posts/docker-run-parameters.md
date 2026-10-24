@@ -1,12 +1,13 @@
-
 ---
 title: "Docker run 启动参数详解"
 description: "从MySQL部署实例出发，全面讲解 docker run 命令的常用参数及最佳实践"
 date: 2026-06-08T00:00:00+08:00
 slug: docker-run-parameters
-categories: ["容器Docker"]
-tags: ["docker", "容器", "run", "参数", "MySQL"]
+categories: ["容器技术"]
+tags: ["run", "参数", "mysql"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 7
 ---
 
 ## 本文实例

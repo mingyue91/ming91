@@ -3,9 +3,11 @@ title: "如何将当前用户添加到 Docker 组？"
 description: "免 sudo 运行 Docker 命令，三步搞定用户组配置"
 date: 2026-05-25T00:00:00+08:00
 slug: docker-add-user-to-group
-categories: ["容器Docker"]
-tags: ["docker", "linux", "权限", "sudo"]
+categories: ["容器技术"]
+tags: ["linux", "权限", "sudo"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 2
 ---
 
 使用 Docker 时，每次执行 `docker` 命令都要加 `sudo`，非常不方便。根本原因是 Docker 守护进程默认以 root 权限运行，普通用户无权访问它的 Unix socket（`/var/run/docker.sock`）。

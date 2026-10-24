@@ -1,0 +1,42 @@
+{{- $series := .Params.series -}}
+{{- if $series -}}
+{{- $name := index $series 0 -}}
+{{- $pages := where site.RegularPages "Params.series" "intersect" (slice $name) -}}
+{{- $pages = sort $pages "Params.series_weight" -}}
+{{- $total := len $pages -}}
+{{- $idx := -1 -}}
+{{- range $i, $page := $pages -}}
+    {{- if eq $page.RelPermalink $.RelPermalink -}}{{- $idx = $i -}}{{- end -}}
+{{- end -}}
+{{- if and (ge $idx 0) (gt $total 1) -}}
+{{- $termPage := "" -}}
+{{- with .GetTerms "series" -}}{{- $termPage = index . 0 -}}{{- end -}}
+<div class="series-box">
+    <div class="series-head">
+        <span class="series-badge">系列</span>
+        {{- with $termPage -}}
+        <a class="series-title" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        {{- else -}}
+        <span class="series-title">{{ $name }}</span>
+        {{- end -}}
+        <span class="series-progress">第 {{ add $idx 1 }} / {{ $total }} 篇</span>
+    </div>
+    <nav class="series-nav">
+        {{- if gt $idx 0 -}}
+            {{- with (index $pages (sub $idx 1)) -}}
+            <a class="series-prev" href="{{ .RelPermalink }}">← {{ .Title }}</a>
+            {{- end -}}
+        {{- else -}}
+            <span class="series-prev series-empty">已是第一篇</span>
+        {{- end -}}
+        {{- if lt $idx (sub $total 1) -}}
+            {{- with (index $pages (add $idx 1)) -}}
+            <a class="series-next" href="{{ .RelPermalink }}">{{ .Title }} →</a>
+            {{- end -}}
+        {{- else -}}
+            <span class="series-next series-empty">已是最后一篇</span>
+        {{- end -}}
+    </nav>
+</div>
+{{- end -}}
+{{- end -}}

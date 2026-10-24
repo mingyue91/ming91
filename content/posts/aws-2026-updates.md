@@ -4,8 +4,10 @@ description: "新服务、新功能、重要变更——一张表看清 AWS 2026
 date: 2026-05-22T00:00:00+08:00
 slug: aws-2026-updates
 categories: ["云计算"]
-tags: ["aws", "2026", "汇总", "更新"]
+tags: ["2026", "汇总", "更新"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 9
 ---
 
 2026 年 AWS 的主题是 **Agent + AI**，同时存储、计算、数据库均有重磅更新。以下是按类别整理的所有重要发布（截至 5 月 19 日）。

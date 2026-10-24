@@ -4,8 +4,10 @@ description: "从策略元素到编写规范，附实用示例与排错步骤"
 date: 2026-05-18T00:00:00+08:00
 slug: aws-iam-policy
 categories: ["云计算"]
-tags: ["aws", "iam", "security", "s3", "安全"]
+tags: ["iam", "s3", "安全"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 6
 ---
 
 ## IAM 策略元素

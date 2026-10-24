@@ -4,8 +4,10 @@ description: "云计算基础知识"
 date: 2026-05-17T00:00:00+08:00
 slug: cloud-intro
 categories: ["云计算"]
-tags: ["cloud", "aws"]
+tags: ["cloud"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 1
 ---
 
 ## 云计算入门

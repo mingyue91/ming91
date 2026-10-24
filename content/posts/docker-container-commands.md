@@ -3,9 +3,11 @@ title: "Docker 容器管理命令详解"
 description: "create、run、start、stop、restart、pause、kill、rm、exec、logs、cp、inspect、stats——Docker 容器完整生命周期管理"
 date: 2026-05-27T00:00:00+08:00
 slug: docker-container-commands
-categories: ["容器Docker"]
-tags: ["docker", "容器", "入门"]
+categories: ["容器技术"]
+tags: ["容器", "生命周期"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 6
 ---
 
 ## 概述

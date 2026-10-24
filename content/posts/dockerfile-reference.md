@@ -3,9 +3,11 @@ title: "Dockerfile 指令详解"
 description: "从 FROM 到 SHELL——17 个 Dockerfile 指令完整参考手册"
 date: 2026-05-27T00:00:00+08:00
 slug: dockerfile-reference
-categories: ["容器Docker"]
-tags: ["docker", "dockerfile", "入门"]
+categories: ["容器技术"]
+tags: ["dockerfile", "镜像"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 4
 ---
 
 ## 概述

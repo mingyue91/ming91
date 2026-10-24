@@ -4,6 +4,7 @@
             {{ partial "article/components/tags" . }}
         </div>
 
+        {{- if eq .Section "posts" }}
         <button type="button" class="pdf-export-btn" onclick="window.print()" title="打开打印对话框，选择「另存为 PDF」">
             <svg class="pdf-export-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -14,6 +15,7 @@
             </svg>
             打印 / 导出 PDF
         </button>
+        {{- end }}
     </div>
 
     {{ if and (.Site.Params.article.license.enabled) (not (eq .Params.license false)) }}

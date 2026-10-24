@@ -92,6 +92,7 @@ hasCJKLanguage = true
 [taxonomies]
   category = "categories"
   tag = "tags"
+  series = "series"
 
 # 只保留首页与文章列表的 RSS；标签/分类也各生成一份全文 RSS 只会重复内容
 [outputs]

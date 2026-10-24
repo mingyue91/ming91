@@ -3,9 +3,11 @@ title: "Docker 入门：从零理解容器化技术"
 description: "镜像、容器、Dockerfile、Compose——一次性搞懂 Docker 核心概念与实践"
 date: 2026-05-19T00:00:00+08:00
 slug: docker-intro
-categories: ["容器Docker"]
-tags: ["docker", "容器", "入门"]
+categories: ["容器技术"]
+tags: ["容器"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 1
 ---
 
 ## 为什么需要 Docker？

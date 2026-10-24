@@ -3,9 +3,11 @@ title: "Docker 存储与网络命令详解"
 description: "volume、network、system 三大子系统——管理数据持久化、容器网络和 Docker 系统资源"
 date: 2026-05-27T00:00:00+08:00
 slug: docker-storage-network
-categories: ["容器Docker"]
-tags: ["docker", "volume", "网络", "进阶"]
+categories: ["容器技术"]
+tags: ["volume", "网络"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 8
 ---
 
 ## 概述

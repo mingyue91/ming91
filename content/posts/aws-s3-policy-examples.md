@@ -5,8 +5,10 @@ date: 2026-05-18T00:00:00+08:00
 lastmod: 2026-05-19T00:00:00+08:00
 slug: aws-s3-policy-examples
 categories: ["云计算"]
-tags: ["aws", "s3", "iam", "安全", "存储"]
+tags: ["s3", "iam", "安全", "存储"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 4
 ---
 
 ## 1. 允许 IAM 用户访问某个存储桶

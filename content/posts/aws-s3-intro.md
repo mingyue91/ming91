@@ -4,8 +4,10 @@ description: "从零开始理解 S3——什么是对象存储、核心概念、
 date: 2026-05-22T00:00:00+08:00
 slug: aws-s3-intro
 categories: ["云计算"]
-tags: ["aws", "s3", "存储", "入门"]
+tags: ["s3", "存储"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 3
 ---
 
 ## 什么是 Amazon S3？

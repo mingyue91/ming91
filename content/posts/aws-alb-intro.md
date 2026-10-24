@@ -4,8 +4,10 @@ description: "ALB 是 AWS 第 7 层负载均衡器，支持基于内容的路由
 date: 2026-07-27T00:00:00+08:00
 slug: aws-alb-intro
 categories: ["云计算"]
-tags: ["aws", "alb", "负载均衡", "网络", "入门"]
+tags: ["alb", "负载均衡", "网络"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 8
 ---
 
 ## 什么是 ALB？

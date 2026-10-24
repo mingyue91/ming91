@@ -3,8 +3,8 @@ title: "如何使用 OpenCode 连接 GitHub 仓库并完成推送"
 description: "从创建仓库到代码推送，图形化操作 + AI 协作完整指南"
 date: 2026-05-25T00:00:00+08:00
 slug: opencode-github-push
-categories: ["其他"]
-tags: ["opencode", "git", "github", "ai", "工具"]
+categories: ["编程与工具"]
+tags: ["opencode", "git", "github", "ai"]
 draft: false
 ---
 

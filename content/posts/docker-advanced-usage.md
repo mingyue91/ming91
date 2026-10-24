@@ -3,9 +3,11 @@ title: "Docker 高级用法：入门之后该学什么"
 description: "网络、数据卷、Dockerfile 优化、Compose——从会跑到会飞"
 date: 2026-05-26T00:00:00+08:00
 slug: docker-advanced-usage
-categories: ["容器Docker"]
-tags: ["docker", "容器", "进阶", "compose", "网络"]
+categories: ["容器技术"]
+tags: ["compose", "网络"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 12
 ---
 
 如果你已经会用 `docker run`、`docker ps` 这些基础命令，但对 Docker 的理解还停留在"跑个容器"的阶段，这篇文章就是为你准备的。

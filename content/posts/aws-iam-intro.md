@@ -4,8 +4,10 @@ description: "基于 AWS 官方文档，一文搞懂 IAM 核心概念"
 date: 2026-05-18T00:00:00+08:00
 slug: aws-iam-intro
 categories: ["云计算"]
-tags: ["aws", "iam", "入门", "安全"]
+tags: ["iam", "安全"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 5
 ---
 
 ## 什么是 IAM？

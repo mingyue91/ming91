@@ -4,9 +4,11 @@ description: "S3、EBS、EFS、FSx、Storage Gateway……一张图看懂 AWS �
 date: 2026-05-22T00:00:00+08:00
 slug: aws-storage-overview
 categories: ["云计算"]
-tags: ["aws", "存储", "s3", "ebs", "efs", "入门"]
+tags: ["s3", "ebs", "efs", "存储"]
 pinned: true
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 2
 ---
 
 AWS 提供十几种存储服务，覆盖块存储、文件存储、对象存储、混合存储、备份与数据迁移等场景。本文帮你理清各服务的定位与选型思路。

@@ -1,12 +1,13 @@
-
 ---
 title: "Dockerfile 基础概念、用法与扩展"
 description: "从零理解 Dockerfile——镜像构建原理、常用指令、最佳实践到进阶扩展"
 date: 2026-06-10T00:00:00+08:00
 slug: dockerfile-basics
-categories: ["容器Docker"]
-tags: ["docker", "dockerfile", "入门", "进阶"]
+categories: ["容器技术"]
+tags: ["dockerfile", "镜像"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 3
 ---
 
 ## 基础概念

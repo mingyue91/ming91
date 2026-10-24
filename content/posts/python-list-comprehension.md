@@ -3,8 +3,8 @@ title: "Python 列表推导式详解"
 description: "列表推导式（List Comprehension）的语法、用法与常见模式，包括嵌套循环、条件过滤、函数调用等"
 date: 2026-07-03T00:00:00+08:00
 slug: python-list-comprehension
-categories: ["python"]
-tags: ["python", "入门"]
+categories: ["编程与工具"]
+tags: ["python"]
 draft: false
 ---
 

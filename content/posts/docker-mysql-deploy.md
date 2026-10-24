@@ -3,9 +3,11 @@ title: "Docker 部署 MySQL 完整指南"
 description: "从拉取镜像到数据持久化，每个参数都讲清楚"
 date: 2026-05-25T00:00:00+08:00
 slug: docker-mysql-deploy
-categories: ["容器Docker"]
-tags: ["docker", "mysql", "数据库", "部署"]
+categories: ["容器技术"]
+tags: ["mysql", "部署", "数据库"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 11
 ---
 
 ## 为什么用 Docker 跑 MySQL？

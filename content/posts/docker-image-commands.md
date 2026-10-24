@@ -3,9 +3,11 @@ title: "Docker 镜像管理命令详解"
 description: "images、search、pull、push、build、tag、rmi、save、load、history、login、logout——Docker 镜像全生命周期命令"
 date: 2026-05-27T00:00:00+08:00
 slug: docker-image-commands
-categories: ["容器Docker"]
-tags: ["docker", "镜像", "进阶"]
+categories: ["容器技术"]
+tags: ["镜像"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 5
 ---
 
 ## 概述

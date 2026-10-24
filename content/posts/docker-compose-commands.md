@@ -3,9 +3,11 @@ title: "Docker Compose 命令详解"
 description: "up、down、logs、exec、build、pull、ps、config——Docker Compose 全部子命令完整参考"
 date: 2026-05-27T00:00:00+08:00
 slug: docker-compose-commands
-categories: ["容器Docker"]
-tags: ["docker", "compose", "进阶"]
+categories: ["容器技术"]
+tags: ["compose", "编排"]
 draft: false
+series: ["Docker从入门到实战"]
+series_weight: 10
 ---
 
 ## 概述

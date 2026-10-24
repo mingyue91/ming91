@@ -34,36 +34,39 @@
 └── public/                    # 构建产物（gitignore）
 ```
 
-## 内容结构（24 篇，2026-05-17 ~ 2026-07-27）
+## 内容结构（23 篇，2026-05-17 ~ 2026-07-27）
 
 | 文件 | 日期 | 分类 | 标题 |
 |---|---|---|---|
 | `aws-alb-intro.md` | 2026-07-27 | 云计算 | AWS ALB 入门：应用负载均衡器核心架构指南 |
-| `python-list-comprehension.md` | 2026-07-03 | python | Python 列表推导式详解 |
-| `dockerfile-basics.md` | 2026-06-10 | 容器Docker | Dockerfile 基础概念、用法与扩展 |
-| `docker-run-parameters.md` | 2026-06-08 | 容器Docker | Docker run 启动参数详解 |
-| `dockerfile-reference.md` | 2026-05-27 | 容器Docker | Dockerfile 指令详解 |
-| `docker-container-commands.md` | 2026-05-27 | 容器Docker | Docker 容器管理命令详解 |
-| `docker-image-commands.md` | 2026-05-27 | 容器Docker | Docker 镜像管理命令详解 |
-| `docker-storage-network.md` | 2026-05-27 | 容器Docker | Docker 存储与网络命令详解 |
-| `docker-compose-commands.md` | 2026-05-27 | 容器Docker | Docker Compose 命令详解 |
-| `docker-advanced-usage.md` | 2026-05-26 | 容器Docker | Docker 高级用法：入门之后该学什么 |
-| `docker-volume-bind-mount.md` | 2026-05-26 | 容器Docker | Docker 数据持久化：Volume 与 Bind Mount 实战 |
-| `docker-add-user-to-group.md` | 2026-05-25 | 容器Docker | 如何将当前用户添加到 Docker 组？ |
-| `docker-mysql-deploy.md` | 2026-05-25 | 容器Docker | Docker 部署 MySQL 完整指南 |
-| `opencode-github-push.md` | 2026-05-25 | 其他 | 如何使用 OpenCode 连接 GitHub 仓库并完成推送 |
+| `python-list-comprehension.md` | 2026-07-03 | 编程与工具 | Python 列表推导式详解 |
+| `dockerfile-basics.md` | 2026-06-10 | 容器技术 | Dockerfile 基础概念、用法与扩展 |
+| `docker-run-parameters.md` | 2026-06-08 | 容器技术 | Docker run 启动参数详解 |
+| `dockerfile-reference.md` | 2026-05-27 | 容器技术 | Dockerfile 指令详解 |
+| `docker-container-commands.md` | 2026-05-27 | 容器技术 | Docker 容器管理命令详解 |
+| `docker-image-commands.md` | 2026-05-27 | 容器技术 | Docker 镜像管理命令详解 |
+| `docker-storage-network.md` | 2026-05-27 | 容器技术 | Docker 存储与网络命令详解 |
+| `docker-compose-commands.md` | 2026-05-27 | 容器技术 | Docker Compose 命令详解 |
+| `docker-advanced-usage.md` | 2026-05-26 | 容器技术 | Docker 高级用法：入门之后该学什么 |
+| `docker-volume-bind-mount.md` | 2026-05-26 | 容器技术 | Docker 数据持久化：Volume 与 Bind Mount 实战 |
+| `docker-add-user-to-group.md` | 2026-05-25 | 容器技术 | 如何将当前用户添加到 Docker 组？ |
+| `docker-mysql-deploy.md` | 2026-05-25 | 容器技术 | Docker 部署 MySQL 完整指南 |
+| `opencode-github-push.md` | 2026-05-25 | 编程与工具 | 如何使用 OpenCode 连接 GitHub 仓库并完成推送 |
 | `aws-2026-updates.md` | 2026-05-22 | 云计算 | AWS 2026 年度更新汇总（截至 5 月） |
 | `aws-database-rds-dynamodb.md` | 2026-05-22 | 云计算 | AWS 数据库服务详解：RDS 与 DynamoDB |
 | `aws-s3-intro.md` | 2026-05-22 | 云计算 | Amazon S3 入门：对象存储基础 |
 | `aws-storage-overview.md` | 2026-05-22 | 云计算 | AWS 存储服务全景（**置顶** `pinned: true`） |
-| `docker-intro.md` | 2026-05-19 | 容器Docker | Docker 入门：从零理解容器化技术 |
+| `docker-intro.md` | 2026-05-19 | 容器技术 | Docker 入门：从零理解容器化技术 |
 | `aws-iam-intro.md` | 2026-05-18 | 云计算 | AWS IAM 入门：身份与访问管理基础 |
 | `aws-iam-policy.md` | 2026-05-18 | 云计算 | AWS IAM 策略完全指南 |
 | `aws-s3-policy-examples.md` | 2026-05-18 | 云计算 | Amazon S3 策略示例：从入门到进阶 |
-| `hello-world.md` | 2026-05-18 | 其他 | Hello World |
 | `cloud-intro.md` | 2026-05-17 | 云计算 | 云计算入门 |
 
-统计：`云计算` 9 篇 ｜ `容器Docker` 12 篇 ｜ `python` 1 篇 ｜ `其他` 2 篇
+统计：`云计算` 9 篇 ｜ `容器技术` 12 篇 ｜ `编程与工具` 2 篇
+
+两个系列（`series` 分类法 + `series_weight` 排序）：
+- `Docker从入门到实战` 12 篇：入门 → 用户组权限 → Dockerfile 基础 → 指令详解 → 镜像 → 容器 → run 参数 → 存储网络 → 数据持久化 → Compose → MySQL 实战 → 进阶
+- `AWS从入门到实战` 9 篇：云计算入门 → 存储全景 → S3 → S3 策略 → IAM → IAM 策略 → 数据库 → ALB → 年度更新
 
 ## Front Matter 规范
 
@@ -73,21 +76,24 @@ title: "文章标题"
 description: "摘要（会显示在卡片副标题上）"
 date: 2026-07-27T00:00:00+08:00
 slug: kebab-case-name
-categories: ["容器Docker"]      # 单分类，取第一个作为卡片分类
-tags: ["docker", "入门"]
-pinned: true                    # 可选，置顶到列表最前
+categories: ["容器技术"]         # 单分类，取第一个作为卡片分类
+tags: ["dockerfile", "镜像"]
+series: ["Docker从入门到实战"]   # 可选；系列名不写空格，避免 URL 编码
+series_weight: 3                 # 可选；系列内阅读顺序，从 1 开始
+pinned: true                     # 可选，置顶到列表最前
 draft: false
 ---
 ```
 
 ## 分类与标签
 
-| 分类 | 实际使用的标签 |
+| 分类 | 导语（写在分类 `_index.md` 的 `description`） |
 |---|---|
-| 云计算 | aws, cloud, s3, iam, alb, rds, dynamodb, ebs, efs, 存储, 安全, security, 数据库, 负载均衡, 网络, 入门, 2026, 汇总, 更新 |
-| 容器Docker | docker, 容器, dockerfile, compose, volume, bind-mount, 网络, 镜像, mysql, 数据库, 部署, run, 参数, 数据持久化, linux, 权限, sudo, 入门, 进阶 |
-| python | python, 入门 |
-| 其他 | blog, hello, opencode, git, github, ai, 工具 |
+| 云计算 | AWS 入门与常用服务：IAM、S3、RDS / DynamoDB、ALB、存储选型 |
+| 容器技术 | Docker 从入门到实战：Dockerfile、镜像与容器命令、存储与网络、Compose |
+| 编程与工具 | Python 等语言笔记，以及 OpenCode 这类效率工具 |
+
+标签约定：**不使用 `入门` / `进阶` / `docker` / `aws` / `工具` 这类噪音标签**（几乎每篇都打 = 没有检索价值）；同义词统一（`mysql` 不写 `MySQL`，`security` 并入 `安全`）；`容器` 只保留在讲容器本身的那两篇。
 
 ## 自定义功能（相对原主题的改动）
 
@@ -109,7 +115,8 @@ draft: false
 | `robots.txt`（放行全部并指向 sitemap） | `layouts/robots.txt`、`hugo.toml`（`enableRobotsTXT = true`） |
 | 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
 | 独立页：归档（主题 `archives` 布局，按年份分组）/ 关于 | `content/page/archives/index.md`、`content/page/about/index.md` |
-| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、移动端适配） | `assets/scss/custom.scss`（446 行） |
+| **文章系列**：文章页顶部显示「系列 · 第 N / M 篇 · 上一篇 / 下一篇」，系列落地页 `/series/<名称>/` | `layouts/_partials/article/components/series.html`、`layouts/_partials/article/article.html`、`content/series/*/_index.md`、`assets/scss/custom.scss` |
+| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（512 行） |
 
 主菜单（`hugo.toml`）：首页 `/`、归档 `/archives/`、关于 `/about/`，均带图标。
 分类页的导语取自分类 `_index.md` 的 `description` 字段（主题 `list.html` 不渲染 `.Content`）。
@@ -150,6 +157,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-10-24（批次 D：分类重构 + 系列）**：分类合并为 云计算 / 容器技术 / 编程与工具，删除「其他」与 `hello-world.md`；新增 `series` 分类法与文章页系列导航；标签清掉 `入门`/`进阶`/`docker`/`aws`/`工具` 并合并同义词；旧分类 URL 用 `aliases` 重定向。
 - **2026-10-24（批次 C：信息架构）**：新增「归档」页（按年份分组）与「关于」页；主菜单改为 首页 / 归档 / 关于并加图标。
 - **2026-10-24（批次 B：清理与 SEO）**：移除 html2pdf（885 KB）与 `pdf-export.js`，PDF 导出改为 `window.print()`；搜索框补 `<label for>` / `aria-label`；新增 robots.txt 与文章页 JSON-LD。
 - **2026-10-24（批次 A：性能与分享）**：RSS 改为只输出摘要（4.6 MB → 27 KB，52 个源 → 6 个）；头像 421 KB → 48 KB；新增 favicon / apple-touch-icon / 1200×630 默认 og:image。

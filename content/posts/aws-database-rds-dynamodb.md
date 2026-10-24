@@ -4,8 +4,10 @@ description: "深入对比 AWS 两大核心数据库服务——关系型的 RDS
 date: 2026-05-22T00:00:00+08:00
 slug: aws-database-rds-dynamodb
 categories: ["云计算"]
-tags: ["aws", "数据库", "rds", "dynamodb", "入门"]
+tags: ["rds", "dynamodb", "数据库"]
 draft: false
+series: ["AWS从入门到实战"]
+series_weight: 7
 ---
 
 AWS 提供两大类托管数据库服务：关系型的 **Amazon RDS**（含 Aurora）和 NoSQL 的 **Amazon DynamoDB**。本文围绕这两大服务展开，涵盖架构、选型、计费和 2026 年最新特性。
