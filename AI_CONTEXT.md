@@ -17,7 +17,7 @@
 ├── hugo.toml                  # 站点配置：菜单、侧边栏、组件、分类法
 ├── content/
 │   ├── posts/                 # 24 篇文章
-│   └── page/search/           # 搜索页（输出 html + json）
+│   └── page/                  # 独立页：search（html+json）/ archives（按年归档）/ about
 ├── layouts/                   # 覆盖主题的模板（首页 / 404 / 卡片 / 侧边栏 / PDF 按钮）
 ├── assets/
 │   ├── scss/custom.scss       # 446 行定制样式
@@ -108,7 +108,11 @@ draft: false
 | 文章页 JSON-LD `BlogPosting`（标题/描述/时间/作者/封面/标签） | `layouts/_partials/head/custom.html` |
 | `robots.txt`（放行全部并指向 sitemap） | `layouts/robots.txt`、`hugo.toml`（`enableRobotsTXT = true`） |
 | 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
+| 独立页：归档（主题 `archives` 布局，按年份分组）/ 关于 | `content/page/archives/index.md`、`content/page/about/index.md` |
 | 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、移动端适配） | `assets/scss/custom.scss`（446 行） |
+
+主菜单（`hugo.toml`）：首页 `/`、归档 `/archives/`、关于 `/about/`，均带图标。
+分类页的导语取自分类 `_index.md` 的 `description` 字段（主题 `list.html` 不渲染 `.Content`）。
 
 `hugo.toml` 中的关键参数：`paginate = 10`、侧边栏头像 `/avatar.jpg`、副标题「二次元 & 技术」、首页组件 `categories` + `tag-cloud`（各 10 条）、文章页组件 `toc`、配色 `scheme = "auto"`。
 
@@ -146,6 +150,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-10-24（批次 C：信息架构）**：新增「归档」页（按年份分组）与「关于」页；主菜单改为 首页 / 归档 / 关于并加图标。
 - **2026-10-24（批次 B：清理与 SEO）**：移除 html2pdf（885 KB）与 `pdf-export.js`，PDF 导出改为 `window.print()`；搜索框补 `<label for>` / `aria-label`；新增 robots.txt 与文章页 JSON-LD。
 - **2026-10-24（批次 A：性能与分享）**：RSS 改为只输出摘要（4.6 MB → 27 KB，52 个源 → 6 个）；头像 421 KB → 48 KB；新增 favicon / apple-touch-icon / 1200×630 默认 og:image。
 - **2026-10-24**：重写本文件，校准为实际状态（24 篇 / 分类统计 / 自定义功能与文件对应关系 / 已知问题）。

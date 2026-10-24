@@ -70,12 +70,24 @@ hasCJKLanguage = true
     name = "首页"
     url = "/"
     weight = 1
+    [menu.main.params]
+      Icon = "home"
 
   [[menu.main]]
-    identifier = "posts"
+    identifier = "archives"
     name = "归档"
-    url = "/posts/"
+    url = "/archives/"
     weight = 2
+    [menu.main.params]
+      Icon = "archives"
+
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 3
+    [menu.main.params]
+      Icon = "user"
 
 [taxonomies]
   category = "categories"
