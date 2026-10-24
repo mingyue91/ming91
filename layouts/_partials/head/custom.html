@@ -10,4 +10,26 @@
 <meta name="twitter:image:alt" content="{{ site.Title }}">
 {{- end }}
 <script src="{{ "js/code-copy.js" | relURL }}" defer></script>
-<script src="{{ "js/pdf-export.js" | relURL }}" defer></script>
+{{- if and .IsPage (eq .Section "posts") }}
+{{- $authorName := "min9" -}}
+{{- with site.Params.author -}}{{- with .name -}}{{- $authorName = . -}}{{- end -}}{{- end -}}
+{{- $desc := .Params.description | default (.Summary | plainify | truncate 160) -}}
+{{- $img := "og-default.jpg" | absURL -}}
+{{- with .Params.image -}}{{- $img = . | absURL -}}{{- end -}}
+{{- $ld := dict
+    "@context" "https://schema.org"
+    "@type" "BlogPosting"
+    "headline" .Title
+    "description" $desc
+    "inLanguage" "zh-CN"
+    "datePublished" (.Date.Format "2006-01-02T15:04:05-07:00")
+    "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")
+    "image" (dict "@type" "ImageObject" "url" $img "width" 1200 "height" 630)
+    "author" (dict "@type" "Person" "name" $authorName "url" ("" | absURL))
+    "publisher" (dict "@type" "Organization" "name" site.Title "logo" (dict "@type" "ImageObject" "url" ("apple-touch-icon.png" | absURL)))
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+-}}
+{{- with .Params.tags -}}{{- $ld = merge $ld (dict "keywords" (delimit . ", ")) -}}{{- end -}}
+{{- with .Params.categories -}}{{- $ld = merge $ld (dict "articleSection" (index . 0)) -}}{{- end -}}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+{{- end }}

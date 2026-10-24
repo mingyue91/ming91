@@ -6,6 +6,7 @@ theme = "stack"
 paginate = 10
 defaultContentLanguage = "zh"
 enableEmoji = true
+enableRobotsTXT = true
 hasCJKLanguage = true
 
 [permalinks]

@@ -28,7 +28,7 @@
 │   ├── favicon.ico            # 16/32/48 多尺寸
 │   ├── apple-touch-icon.png   # 180px
 │   ├── og-default.jpg         # 1200×630 默认分享卡片
-│   └── js/                    # home-filter / code-copy / pdf-export / html2pdf.bundle
+│   └── js/                    # home-filter / code-copy
 ├── themes/stack/              # 主题子模块（勿手改，升级用 git submodule update）
 ├── .github/workflows/deploy.yml
 └── public/                    # 构建产物（gitignore）
@@ -100,11 +100,13 @@ draft: false
 | 侧边栏覆盖（头像/菜单/主题切换/语言切换） | `layouts/_partials/sidebar/left.html` |
 | 文章卡片覆盖（更新徽章、分类色块、标签） | `layouts/_partials/article/components/details.html` |
 | 文章页覆盖（桌面端 TOC 侧栏） | `layouts/_partials/article/article.html` |
-| 文章底部**「导出 PDF」**按钮（本地 html2pdf，零 CDN；失败降级 `window.print()`）+ 配套 `@media print` 样式 | `layouts/_partials/article/components/footer.html`、`static/js/pdf-export.js`、`static/js/html2pdf.bundle.min.js`、`assets/scss/custom.scss` |
+| 文章底部**「打印 / 导出 PDF」**按钮：直接 `window.print()`，由 `@media print` 样式排版（矢量文字、可选中；2026-10-24 起不再依赖 html2pdf） | `layouts/_partials/article/components/footer.html`、`assets/scss/custom.scss` |
 | **代码块复制按钮**（SVG 图标 + Toast 提示） | `static/js/code-copy.js`、`assets/icons/copy.svg`、`assets/scss/custom.scss` |
-| 全局脚本注入（代码复制 / PDF 导出） | `layouts/_partials/head/custom.html` |
+| 全局脚本注入 | `layouts/_partials/head/custom.html` |
 | 图标与默认社交卡片：favicon(16/32/48)、apple-touch-icon(180)、og:image(1200×630) | `layouts/_partials/head/custom.html`、`static/favicon.ico`、`static/apple-touch-icon.png`、`static/og-default.jpg` |
 | RSS 只输出摘要；tag/category 不再各自生成 RSS | `layouts/rss.xml`、`hugo.toml`（`[services.rss] limit = 10`、`[outputs] term = ["HTML"]`） |
+| 文章页 JSON-LD `BlogPosting`（标题/描述/时间/作者/封面/标签） | `layouts/_partials/head/custom.html` |
+| `robots.txt`（放行全部并指向 sitemap） | `layouts/robots.txt`、`hugo.toml`（`enableRobotsTXT = true`） |
 | 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
 | 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、移动端适配） | `assets/scss/custom.scss`（446 行） |
 
@@ -144,6 +146,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-10-24（批次 B：清理与 SEO）**：移除 html2pdf（885 KB）与 `pdf-export.js`，PDF 导出改为 `window.print()`；搜索框补 `<label for>` / `aria-label`；新增 robots.txt 与文章页 JSON-LD。
 - **2026-10-24（批次 A：性能与分享）**：RSS 改为只输出摘要（4.6 MB → 27 KB，52 个源 → 6 个）；头像 421 KB → 48 KB；新增 favicon / apple-touch-icon / 1200×630 默认 og:image。
 - **2026-10-24**：重写本文件，校准为实际状态（24 篇 / 分类统计 / 自定义功能与文件对应关系 / 已知问题）。
 - **2026-07-27**：新增 `aws-alb-intro.md`。

@@ -18,8 +18,8 @@
     {{- with $searchPage -}}
         <form action="{{ $searchPage.RelPermalink }}" class="search-form widget" {{ with .OutputFormats.Get "json" -}}data-json="{{ .RelPermalink }}"{{- end }}>
             <p>
-                <label>{{ T "search.title" }}</label>
-                <input id="searchInput" name="keyword" required placeholder="{{ T `search.placeholder` }}" />
+                <label for="searchInput">{{ T "search.title" }}</label>
+                <input id="searchInput" name="keyword" type="search" required placeholder="{{ T `search.placeholder` }}" />
                 <button title="{{ T `search.title` }}">
                     {{ partial "helper/icon" "search" }}
                 </button>
