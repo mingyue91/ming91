@@ -409,6 +409,58 @@
     }
 }
 
+/* ---------- 分页：点状指示器 ---------- */
+
+:root {
+    --dot-color: rgba(23, 32, 84, 0.22);
+}
+
+:root[data-scheme="dark"] {
+    --dot-color: rgba(255, 255, 255, 0.26);
+}
+
+.pagination.pagination-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    margin: 32px auto 8px;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
+
+    .pagination-dot {
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--dot-color);
+        transition: width 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+
+        &:hover {
+            background: var(--accent-color);
+            opacity: 0.75;
+        }
+
+        &.is-active {
+            width: 24px;
+            background: var(--accent-color);
+        }
+    }
+
+    .pagination-gap {
+        display: block;
+        width: 12px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--dot-color);
+        opacity: 0.5;
+    }
+}
+
 /* ---------- 毛玻璃：柔光背景 + 中间板块 ---------- */
 
 :root {

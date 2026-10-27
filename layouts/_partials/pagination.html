@@ -1,0 +1,48 @@
+{{- $pag := $.Paginator -}}
+{{- if gt $pag.TotalPages 1 -}}
+    {{- $total := $pag.TotalPages -}}
+    {{- $curr := $pag.PageNumber -}}
+
+    {{- /* 中间窗口：总共 ≤5 页时全显示，否则只显示当前页附近 3 页 */ -}}
+    {{- $middleMinPage := 2 -}}
+    {{- $middleMaxPage := sub $total 1 -}}
+    {{- $start := $middleMinPage -}}
+    {{- $end := $middleMaxPage -}}
+    {{- if gt $total 5 -}}
+        {{- $start = sub $curr 1 -}}
+        {{- if lt $start $middleMinPage -}}{{- $start = $middleMinPage -}}{{- end -}}
+        {{- $end = add $start 2 -}}
+        {{- if gt $end $middleMaxPage -}}
+            {{- $end = $middleMaxPage -}}
+            {{- $start = sub $end 2 -}}
+        {{- end -}}
+    {{- end -}}
+
+    <nav class="pagination pagination-dots" role="navigation" aria-label="分页导航">
+        {{- range $pag.Pagers -}}
+            {{- if eq .PageNumber 1 }}
+        <a class="pagination-dot{{ if eq .PageNumber $curr }} is-active{{ end }}" href="{{ .URL }}" aria-label="第 1 页"{{ if eq .PageNumber $curr }} aria-current="page"{{ end }}></a>
+            {{- end -}}
+        {{- end -}}
+
+        {{- if gt $start $middleMinPage }}
+        <span class="pagination-gap" aria-hidden="true"></span>
+        {{- end -}}
+
+        {{- range $pag.Pagers -}}
+            {{- if and (gt .PageNumber 1) (lt .PageNumber $total) (ge .PageNumber $start) (le .PageNumber $end) }}
+        <a class="pagination-dot{{ if eq .PageNumber $curr }} is-active{{ end }}" href="{{ .URL }}" aria-label="第 {{ .PageNumber }} 页"{{ if eq .PageNumber $curr }} aria-current="page"{{ end }}></a>
+            {{- end -}}
+        {{- end -}}
+
+        {{- if lt $end $middleMaxPage }}
+        <span class="pagination-gap" aria-hidden="true"></span>
+        {{- end -}}
+
+        {{- range $pag.Pagers -}}
+            {{- if eq .PageNumber $total }}
+        <a class="pagination-dot{{ if eq .PageNumber $curr }} is-active{{ end }}" href="{{ .URL }}" aria-label="第 {{ $total }} 页"{{ if eq .PageNumber $curr }} aria-current="page"{{ end }}></a>
+            {{- end -}}
+        {{- end -}}
+    </nav>
+{{- end -}}
