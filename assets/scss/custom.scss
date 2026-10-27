@@ -409,10 +409,85 @@
     }
 }
 
+/* ---------- 毛玻璃：柔光背景 + 中间板块 ---------- */
+
+:root {
+    --body-background: #f4f6fb;
+
+    --glass-tint: rgba(255, 255, 255, 0.42);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08));
+    --glass-border: rgba(255, 255, 255, 0.7);
+    --glass-shadow: 0 10px 34px rgba(23, 32, 84, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --glass-filter: blur(22px) saturate(170%);
+}
+
+:root[data-scheme="dark"] {
+    --body-background: #232428;
+
+    --glass-tint: rgba(44, 44, 50, 0.5);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 10px 34px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* 背景：三团柔光色块，固定不随滚动，为毛玻璃提供“背后有东西”的层次 */
+body {
+    background-image:
+        radial-gradient(1100px 760px at 2% -12%, rgba(150, 190, 255, 0.95) 0%, rgba(150, 190, 255, 0) 62%),
+        radial-gradient(1000px 720px at 98% 2%, rgba(255, 175, 215, 0.85) 0%, rgba(255, 175, 215, 0) 60%),
+        radial-gradient(1000px 820px at 62% 112%, rgba(165, 180, 255, 0.9) 0%, rgba(165, 180, 255, 0) 64%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+[data-scheme="dark"] body {
+    background-image:
+        radial-gradient(1100px 760px at 2% -12%, rgba(46, 68, 120, 0.95) 0%, rgba(46, 68, 120, 0) 62%),
+        radial-gradient(1000px 720px at 98% 2%, rgba(96, 48, 96, 0.8) 0%, rgba(96, 48, 96, 0) 60%),
+        radial-gradient(1000px 820px at 62% 112%, rgba(52, 58, 108, 0.9) 0%, rgba(52, 58, 108, 0) 64%);
+}
+
+/* 中间板块：文章页正文、首页/列表卡片、分类标题卡、搜索框、分类胶囊、文内目录 */
+.main-article,
+.article-list .card,
+.section-card,
+.search-box,
+.category-tabs .tab,
+.article-toc details {
+    background: var(--glass-sheen), var(--glass-tint);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
+    border-color: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.main-article {
+    border: 1px solid var(--glass-border);
+}
+
+@media (max-width: 767px) {
+    :root {
+        --glass-filter: blur(12px) saturate(140%);
+    }
+}
+
 @media print {
     body {
         background: white !important;
+        background-image: none !important;
         color: black !important;
+    }
+
+    .main-article,
+    .article-list .card,
+    .section-card,
+    .search-box,
+    .category-tabs .tab,
+    .article-toc details {
+        background: #fff !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
     }
 
     .left-sidebar,

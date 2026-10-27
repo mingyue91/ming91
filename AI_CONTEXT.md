@@ -116,7 +116,8 @@ draft: false
 | 首页底部外链（AWS 控制台 / Qwen / gal.saop.cc） | `layouts/home.html` |
 | 独立页：归档（主题 `archives` 布局，按年份分组）/ 关于 | `content/page/archives/index.md`、`content/page/about/index.md` |
 | **文章系列**：文章页顶部显示「系列 · 第 N / M 篇 · 上一篇 / 下一篇」，系列落地页 `/series/<名称>/` | `layouts/_partials/article/components/series.html`、`layouts/_partials/article/article.html`、`content/series/*/_index.md`、`assets/scss/custom.scss` |
-| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（512 行） |
+| **毛玻璃视觉**：`body` 三团柔光渐变（fixed）+ 中间板块 `backdrop-filter`；浅色/暗色两套 `--glass-*` 变量，移动端降低模糊半径，打印时强制白底 | `assets/scss/custom.scss` |
+| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（587 行） |
 
 主菜单（`hugo.toml`）：首页 `/`、归档 `/archives/`、关于 `/about/`，均带图标。
 分类页的导语取自分类 `_index.md` 的 `description` 字段（主题 `list.html` 不渲染 `.Content`）。
@@ -157,6 +158,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-10-27（视觉：毛玻璃）**：新增柔光渐变背景与中间板块的 `backdrop-filter` 玻璃效果，浅色/暗色各一套变量；打印时回退为白底。
 - **2026-10-24（批次 D：分类重构 + 系列）**：分类合并为 云计算 / 容器技术 / 编程与工具，删除「其他」与 `hello-world.md`；新增 `series` 分类法与文章页系列导航；标签清掉 `入门`/`进阶`/`docker`/`aws`/`工具` 并合并同义词；旧分类 URL 用 `aliases` 重定向。
 - **2026-10-24（批次 C：信息架构）**：新增「归档」页（按年份分组）与「关于」页；主菜单改为 首页 / 归档 / 关于并加图标。
 - **2026-10-24（批次 B：清理与 SEO）**：移除 html2pdf（885 KB）与 `pdf-export.js`，PDF 导出改为 `window.print()`；搜索框补 `<label for>` / `aria-label`；新增 robots.txt 与文章页 JSON-LD。
