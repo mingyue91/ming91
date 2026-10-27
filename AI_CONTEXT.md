@@ -159,6 +159,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-10-27（社交）**：侧边栏新增 Bilibili 图标（`assets/icons/brand-bilibili.svg`，取自 Tabler Icons，线条风格与 GitHub 图标一致），关于页补 Bilibili 链接。
 - **2026-10-27（视觉：点状分页）**：底部页码从「数字 + 跳转弹窗」改为居中小圆点，当前页显示为长条；`home-filter.js` 依赖的 `.pagination` 类名保留。
 - **2026-10-27（视觉：毛玻璃）**：新增柔光渐变背景与中间板块的 `backdrop-filter` 玻璃效果，浅色/暗色各一套变量；打印时回退为白底。
 - **2026-10-24（批次 D：分类重构 + 系列）**：分类合并为 云计算 / 容器技术 / 编程与工具，删除「其他」与 `hello-world.md`；新增 `series` 分类法与文章页系列导航；标签清掉 `入门`/`进阶`/`docker`/`aws`/`工具` 并合并同义词；旧分类 URL 用 `aliases` 重定向。

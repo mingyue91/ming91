@@ -18,6 +18,7 @@ slug: "about"
 二次元 & 技术。现在正在备考 **AWS Certified Solutions Architect – Associate（SAA）**，日常精力主要花在云平台和容器化上，偶尔折腾点自动化，顺手把过程记下来。
 
 - GitHub：[@mingyue91](https://github.com/mingyue91)
+- Bilibili：[个人空间](https://space.bilibili.com/1316738338)
 - 订阅：[RSS](/index.xml)
 
 ## 关于这个站

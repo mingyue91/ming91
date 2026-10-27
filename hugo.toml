@@ -57,10 +57,19 @@ hasCJKLanguage = true
       newTab = true
 
   [[menu.social]]
+    identifier = "bilibili"
+    name = "Bilibili"
+    url = "https://space.bilibili.com/1316738338"
+    weight = 2
+    [menu.social.params]
+      Icon = "brand-bilibili"
+      newTab = true
+
+  [[menu.social]]
     identifier = "rss"
     name = "RSS"
     url = "/index.xml"
-    weight = 2
+    weight = 3
     [menu.social.params]
       Icon = "rss"
       newTab = true
