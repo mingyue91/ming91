@@ -143,9 +143,8 @@ git add .; git commit -m "msg"; git push
 1. **Hugo 0.161.0 的 `--minify` 有 bug**，构建只用 `hugo`，CI 里也是不带 minify 的。
 2. **中文 `.Summary` 陷阱**：Hugo 按空格分词，中文整段算一个"词"，`.Summary` 会退化成全文（修复前 RSS 单条达 26,000 字符）。生成 RSS/摘要一律用 `description` 或 `| truncate`，别直接用 `.Summary`。
 3. **凭据**：`.git/config` 的 remote URL 里内嵌了明文 GitHub token；`.github/config/github_token` 也存了一份（已 gitignore）。建议 `git remote set-url origin https://github.com/mingyue91/ming91.git`，token 只留在被忽略的文件里；如果该目录曾外传，去 GitHub 吊销重建。
-4. `layouts/home.html` 里生成的 `window.__articles` 数组前端没有用到（`window.searchURL` 有用），属于遗留代码，可删。
-5. `i18n/` 为空目录。
-6. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
+4. `i18n/` 为空目录。
+5. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
 
 ## 已修复（留档）
 
@@ -159,6 +158,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-11-09（清理）**：删掉 `home.html` 里没人用的 `window.__articles` 数组（保留 `window.searchURL`）。
 - **2026-10-27（社交）**：侧边栏新增 Bilibili 图标（`assets/icons/brand-bilibili.svg`，取自 Tabler Icons，线条风格与 GitHub 图标一致），关于页补 Bilibili 链接。
 - **2026-10-27（视觉：点状分页）**：底部页码从「数字 + 跳转弹窗」改为居中小圆点，当前页显示为长条；`home-filter.js` 依赖的 `.pagination` 类名保留。
 - **2026-10-27（视觉：毛玻璃）**：新增柔光渐变背景与中间板块的 `backdrop-filter` 玻璃效果，浅色/暗色各一套变量；打印时回退为白底。

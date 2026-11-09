@@ -7,14 +7,7 @@
     <button type="button" id="search-clear" class="search-clear" style="display:none" aria-label="清除搜索">&times;</button>
 </div>
 
-{{- $allArticles := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
 <script>
-window.__articles = [
-{{- range $allArticles -}}
-  {{- $cat := index .Params.categories 0 | default "其他" -}}
-  {category:{{ $cat | lower | jsonify | safeJS }}, pinned:{{ default false .Params.pinned }}},
-{{- end -}}
-];
 window.searchURL = '{{ "search/" | relURL | safeJS }}';
 </script>
 
