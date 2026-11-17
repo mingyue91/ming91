@@ -142,7 +142,7 @@ git add .; git commit -m "msg"; git push
 
 1. **Hugo 0.161.0 的 `--minify` 有 bug**，构建只用 `hugo`，CI 里也是不带 minify 的。
 2. **中文 `.Summary` 陷阱**：Hugo 按空格分词，中文整段算一个"词"，`.Summary` 会退化成全文（修复前 RSS 单条达 26,000 字符）。生成 RSS/摘要一律用 `description` 或 `| truncate`，别直接用 `.Summary`。
-3. **凭据**：`.git/config` 的 remote URL 里内嵌了明文 GitHub token；`.github/config/github_token` 也存了一份（已 gitignore）。建议 `git remote set-url origin https://github.com/mingyue91/ming91.git`，token 只留在被忽略的文件里；如果该目录曾外传，去 GitHub 吊销重建。
+3. **凭据（2026-11-17 已整改）**：remote URL 已改为无 token 的 `https://github.com/mingyue91/ming91.git`，git push 认证交给 Git Credential Manager（全局 `credential.helper = manager`）托管；已删除 `.github/config/github_token`，`setup-git.ps1` 不再注入 token（仅设置干净 HTTPS）。旧 token `ghp_7DD4…7GIg` 已于 2026-11-17 在 GitHub 网页吊销（整改前只存在于本地，未进 Git 历史、未进文章）；首次 push 如提示登录按 GCM 浏览器流程重新认证。审计命令：`git remote -v`、`git config --get credential.helper`。
 4. `i18n/` 为空目录。
 5. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
 
@@ -158,6 +158,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-11-17（安全）**：移除明文 token —— remote URL 改为无 token HTTPS、删除 `github_token` 文件、`setup-git.ps1` 停止注入 token；旧 token 已在 GitHub 网页吊销。
 - **2026-11-09（清理）**：删掉 `home.html` 里没人用的 `window.__articles` 数组（保留 `window.searchURL`）。
 - **2026-10-27（社交）**：侧边栏新增 Bilibili 图标（`assets/icons/brand-bilibili.svg`，取自 Tabler Icons，线条风格与 GitHub 图标一致），关于页补 Bilibili 链接。
 - **2026-10-27（视觉：点状分页）**：底部页码从「数字 + 跳转弹窗」改为居中小圆点，当前页显示为长条；`home-filter.js` 依赖的 `.pagination` 类名保留。
