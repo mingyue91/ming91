@@ -1,0 +1,109 @@
+{{ define "body-class" }}docker-course-page{{ end }}
+
+{{ define "main" }}
+{{- $cur := hugo.Data.docker.curriculum -}}
+{{- $total := 0 -}}
+{{- $first := "" -}}
+{{- range $cur.chapters -}}
+    {{- range .lessons -}}
+        {{- $total = add $total 1 -}}
+        {{- if not $first -}}{{- $first = .id -}}{{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- $firstRank := index $cur.ranks 0 -}}
+
+<div class="docker-course" data-course-home>
+    <header class="course-hero">
+        <div class="course-hero-copy">
+            <p class="course-kicker">{{ $cur.kicker }}</p>
+            <h1 class="course-title">{{ .Title }}</h1>
+            <p class="course-sub">{{ .Description | default $cur.subtitle }}</p>
+            <div class="course-cta">
+                <a class="course-start" data-course-continue href="{{ printf "docker/%s/" $first | relURL }}">
+                    <span>开始学习</span>
+                </a>
+                <span class="course-streak" data-course-streak>🔥 连续 0 天</span>
+            </div>
+        </div>
+
+        <div class="course-hero-panel">
+            <div class="course-ring" data-course-ring style="--p:0%">
+                <div class="course-ring-inner">
+                    <strong data-course-percent>0%</strong>
+                    <span>通关进度</span>
+                </div>
+            </div>
+            <div class="course-stats">
+                <div class="course-stat">
+                    <strong data-course-xp>0</strong>
+                    <span>XP</span>
+                </div>
+                <div class="course-stat">
+                    <strong data-course-done>0/{{ $total }}</strong>
+                    <span>已通关</span>
+                </div>
+                <div class="course-stat course-stat-rank">
+                    <strong data-course-rank>{{ $firstRank.icon }} {{ $firstRank.name }}</strong>
+                    <span>当前等级</span>
+                </div>
+            </div>
+            <p class="course-next-rank" data-course-next-rank></p>
+        </div>
+    </header>
+
+    <div class="course-chapters">
+        {{- range $ci, $ch := $cur.chapters }}
+        <section class="course-chapter">
+            <header class="course-chapter-head">
+                <h2 class="course-chapter-title">
+                    {{ with $ch.icon }}<span class="chapter-icon">{{ . }}</span>{{ end }}
+                    {{ $ch.title }}
+                </h2>
+                <span class="chapter-progress" data-chapter-progress="{{ $ch.id }}">0/{{ len $ch.lessons }}</span>
+                <p class="chapter-desc">{{ $ch.desc }}</p>
+            </header>
+            <ol class="course-lessons">
+                {{- range $l := $ch.lessons }}
+                <li>
+                    <a class="course-lesson" data-lesson-id="{{ $l.id }}" href="{{ printf "docker/%s/" $l.id | relURL }}">
+                        <span class="lesson-status" aria-hidden="true"></span>
+                        <span class="lesson-main">
+                            <span class="lesson-title">{{ $l.title }}</span>
+                            <span class="lesson-meta">
+                                <span class="chip chip-{{ $l.level }}">{{ $l.difficulty }}</span>
+                                <span>⏱ {{ $l.minutes }} 分钟</span>
+                                <span class="lesson-xp">+{{ $l.xp }} XP</span>
+                            </span>
+                        </span>
+                        <span class="lesson-quiz-count" title="自测题数">📝 {{ len $l.quiz }}</span>
+                    </a>
+                </li>
+                {{- end }}
+            </ol>
+        </section>
+        {{- end }}
+    </div>
+
+    <section class="course-badges">
+        <h2 class="section-title">成就徽章</h2>
+        <div class="badge-grid">
+            {{- range $cur.badges }}
+            <div class="course-badge" data-badge-id="{{ .id }}">
+                <span class="badge-icon">{{ .icon }}</span>
+                <span class="badge-name">{{ .name }}</span>
+                <span class="badge-desc">{{ .desc }}</span>
+            </div>
+            {{- end }}
+        </div>
+    </section>
+
+    <div class="course-footnote">
+        <p>💡 进度保存在本机浏览器（localStorage），换设备或清缓存会重置。正文仍在博客的
+            <a href="{{ "posts/" | relURL }}">文章归档</a>，课程页只做导读与自测。</p>
+        <button type="button" class="course-reset" data-course-reset>重置进度</button>
+    </div>
+</div>
+
+{{ partialCached "footer/footer" . }}
+{{- partial "docker/course-data" . -}}
+{{ end }}

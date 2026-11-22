@@ -1,0 +1,5 @@
+{{- /* 把课程数据以 JSON 形式注入页面，供前端游戏化逻辑使用 */ -}}
+{{- $cur := hugo.Data.docker.curriculum -}}
+{{- $json := $cur | jsonify -}}
+{{- $json = replace $json "</" "<\\/" -}}
+<script type="application/json" id="docker-course-data">{{ $json | safeJS }}</script>

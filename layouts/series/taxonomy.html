@@ -1,0 +1,55 @@
+{{ define "main" }}
+    {{- $terms := .Pages -}}
+
+    <header>
+        <div class="section-card">
+            <div class="section-details">
+                <h3 class="section-count">{{ len $terms }} 个系列</h3>
+                <h1 class="section-term">{{ .Title }}</h1>
+                {{ with .Params.description }}
+                    <h2 class="section-description">{{ . }}</h2>
+                {{ end }}
+            </div>
+        </div>
+    </header>
+
+    {{- if $terms -}}
+    <section class="series-index">
+        {{- range $terms -}}
+            {{- $pages := sort .Pages "Params.series_weight" -}}
+            {{- $count := len $pages -}}
+            <article class="series-card">
+                <header class="series-card-header">
+                    <h2 class="series-card-title">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </h2>
+                    <div class="series-card-meta">
+                        <span class="series-card-count">{{ $count }} 篇</span>
+                        {{- with .Params.description }}
+                        <span class="series-card-desc">{{ . }}</span>
+                        {{- end }}
+                    </div>
+                </header>
+
+                <div class="series-card-list">
+                    {{- range $i, $page := $pages }}
+                    <a href="{{ $page.RelPermalink }}" class="series-card-item{{ if eq $i 0 }} series-card-item--first{{ end }}">
+                        <span class="series-card-index">{{ add $i 1 }}</span>
+                        <span class="series-card-item-title">{{ $page.Title }}</span>
+                        <time class="series-card-item-date" datetime="{{ $page.Date.Format "2006-01-02" }}">{{ $page.Date.Format "2006-01-02" }}</time>
+                    </a>
+                    {{- end }}
+                </div>
+            </article>
+        {{- end }}
+    </section>
+    {{- else -}}
+    <p class="series-empty-tip">暂无系列文章。</p>
+    {{- end -}}
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}

@@ -1,0 +1,61 @@
+{{- /*
+Params:
+    Resource: Hugo image resource object (Optional, for processing)
+    Widths: Slice of widths to generate for srcset
+    Attributes: Map of HTML attributes for the <img> tag
+    Formats: Slice of output formats to generate (default: ["avif", "webp", "jpeg"])
+*/ -}}
+
+{{- $resource := .Resource -}}
+{{- $widths := .Widths -}}
+{{- $attributes := .Attributes | default dict -}}
+{{- $formats := .Formats | default (slice "avif" "webp" "jpg") -}}
+
+{{- /* GIF 转码会丢失动画，直接回退原始文件 */ -}}
+{{- $isGif := and $resource (eq $resource.MediaType.SubType "gif") -}}
+
+{{/* Generate picture element with multiple sources for modern formats */}}
+{{- if and $widths $resource (reflect.IsImageResourceProcessable $resource) (not $isGif) -}}
+
+    {{/* Build srcsets for each format */}}
+    {{- $formatSrcsets := dict -}}
+    {{- range $format := $formats -}}
+        {{- $srcset := slice -}}
+        {{- range $w := $widths -}}
+            {{- if lt $w $resource.Width -}}
+                {{- $resized := $resource.Resize (printf "%dx %s" $w $format) -}}
+                {{- $srcset = $srcset | append (printf "%s %dw" $resized.RelPermalink $w) -}}
+            {{- end -}}
+        {{- end -}}
+        {{- $original := $resource.Resize (printf "%dx %s" $resource.Width $format) -}}
+        {{- $srcset = $srcset | append (printf "%s %dw" $original.RelPermalink $resource.Width) -}}
+        {{- $formatSrcsets = merge $formatSrcsets (dict $format (delimit $srcset ", ")) -}}
+    {{- end -}}
+
+    {{/* Determine MIME types */}}
+    {{- $mimeTypes := dict "webp" "image/webp" "avif" "image/avif" "jpeg" "image/jpeg" "jpg" "image/jpeg" "png" "image/png" -}}
+
+    <picture>
+        {{- range $format := $formats -}}
+            {{- $srcset := index $formatSrcsets $format -}}
+            {{- if $srcset -}}
+                <source type="{{ index $mimeTypes $format }}" srcset="{{ $srcset }}"{{ with index $attributes "sizes" }} sizes="{{ . }}"{{ end }}>
+            {{- end -}}
+        {{- end -}}
+
+        {{/* Fallback img tag */}}
+        <img {{- range $k, $v := $attributes -}}
+            {{- if and $v (ne $k "srcset") -}}
+                {{- printf " %s=%q" (lower $k) (printf "%v" $v) | safeHTMLAttr -}}
+            {{- end -}}
+        {{- end -}}>
+    </picture>
+
+{{- else -}}
+    {{/* Fallback for non-processable images, GIFs, or when widths are not provided */}}
+    <img {{- range $k, $v := $attributes -}}
+        {{- if $v -}}
+            {{- printf " %s=%q" (lower $k) (printf "%v" $v) | safeHTMLAttr -}}
+        {{- end -}}
+    {{- end -}}>
+{{- end -}}

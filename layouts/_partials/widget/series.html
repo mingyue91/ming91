@@ -1,0 +1,41 @@
+{{- $context := .Context -}}
+{{- $params := .Params -}}
+
+{{- $title := default (T "widget.series.title") $params.title -}}
+{{- $limit := default 5 $params.limit -}}
+{{- $icon := default "infinity" $params.icon -}}
+{{- $showLink := default true $params.showLink -}}
+{{- $taxonomy := index $context.Site.Taxonomies "series" -}}
+{{- $seriesPage := $context.Site.GetPage "series" -}}
+
+{{- with $taxonomy -}}
+<section class="widget series-widget">
+    <div class="widget-icon">
+        {{ partial "helper/icon" $icon }}
+    </div>
+    <h2 class="widget-title section-title">
+        {{ if and $showLink $seriesPage }}
+            <a href="{{ $seriesPage.RelPermalink }}">{{ $title }}</a>
+        {{ else }}
+            {{ $title }}
+        {{ end }}
+    </h2>
+
+    <ul class="series-widget-list">
+        {{- range first $limit .ByCount -}}
+        <li class="series-widget-item">
+            <a href="{{ .Page.RelPermalink }}" class="series-widget-link">
+                <span class="series-widget-name">{{ .Page.LinkTitle }}</span>
+                <span class="series-widget-count">{{ .Count }} 篇</span>
+            </a>
+        </li>
+        {{- end -}}
+    </ul>
+
+    {{- if and $seriesPage (gt (len .ByCount) $limit) }}
+    <footer class="widget-footer">
+        <a href="{{ $seriesPage.RelPermalink }}" class="widget-view-all">查看全部 {{ len .ByCount }} 个系列 →</a>
+    </footer>
+    {{- end -}}
+</section>
+{{- end -}}

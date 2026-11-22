@@ -1,0 +1,98 @@
+{{ define "body-class" }}docker-course-page docker-lesson-page{{ end }}
+
+{{ define "main" }}
+{{- $p := .Params -}}
+<article class="docker-lesson"
+         data-course-lesson
+         data-lesson-id="{{ $p.lessonId }}"
+         data-lesson-xp="{{ $p.xp }}"
+         data-quiz-bonus="20">
+
+    <nav class="lesson-breadcrumb">
+        <a href="{{ "docker/" | relURL }}">← Docker 学习路径</a>
+        <span class="crumb-sep">/</span>
+        <span>{{ $p.chapterTitle }}</span>
+    </nav>
+
+    <header class="lesson-header">
+        <p class="lesson-number">第 {{ $p.lessonNumber }} 关 · 共 {{ $p.totalLessons }} 关</p>
+        <h1 class="lesson-title">{{ .Title }}</h1>
+        <div class="lesson-chips">
+            <span class="chip chip-{{ $p.level }}">{{ $p.difficulty }}</span>
+            <span class="chip">⏱ {{ $p.minutes }} 分钟</span>
+            <span class="chip chip-xp">+{{ $p.xp }} XP</span>
+            <span class="lesson-status-text" data-lesson-status>未通关</span>
+        </div>
+    </header>
+
+    <section class="lesson-block">
+        <h2>🎯 本关目标</h2>
+        <ul class="lesson-objectives">
+            {{- range $p.objectives }}
+            <li>{{ . }}</li>
+            {{- end }}
+        </ul>
+    </section>
+
+    <section class="lesson-block lesson-read">
+        <h2>📖 阅读正文</h2>
+        {{- with $p.summary }}<p class="lesson-summary">{{ . }}</p>{{ end }}
+        <a class="lesson-read-link" href="{{ printf "posts/%s/" $p.post | relURL }}">
+            <span class="read-link-icon">📄</span>
+            <span class="read-link-text">
+                <strong>去读完整文章</strong>
+                <small>正文包含更多命令示例和踩坑记录</small>
+            </span>
+            <span class="read-link-arrow">→</span>
+        </a>
+    </section>
+
+    {{- with $p.quiz }}
+    <section class="lesson-block lesson-quiz" data-quiz>
+        <h2>📝 本关自测 <small>（{{ len . }} 题，全部答对 +20 XP）</small></h2>
+        {{- range $qi, $q := . }}
+        <div class="quiz-q" data-answer="{{ $q.answer }}">
+            <p class="quiz-prompt"><span class="quiz-index">{{ add $qi 1 }}.</span>{{ $q.q }}</p>
+            <div class="quiz-options">
+                {{- range $oi, $opt := $q.options }}
+                <label class="quiz-opt">
+                    <input type="radio" name="q-{{ $p.lessonId }}-{{ $qi }}" value="{{ $oi }}">
+                    <span class="quiz-opt-text">{{ $opt }}</span>
+                </label>
+                {{- end }}
+            </div>
+            {{- with $q.explain }}
+            <p class="quiz-explain" hidden>{{ . }}</p>
+            {{- end }}
+        </div>
+        {{- end }}
+        <div class="quiz-actions">
+            <button type="button" class="btn-quiz" data-quiz-submit>提交答案</button>
+            <span class="quiz-result" data-quiz-result></span>
+            <span class="quiz-best" data-quiz-best></span>
+        </div>
+    </section>
+    {{- end }}
+
+    <section class="lesson-finish">
+        <button type="button" class="course-complete" data-course-complete>完成本关 · +{{ $p.xp }} XP</button>
+        <p class="lesson-finish-hint" data-finish-hint>完成本关即可获得 {{ $p.xp }} XP；自测全对再额外 +20 XP。</p>
+    </section>
+
+    <nav class="lesson-nav">
+        {{- with $p.prevPath }}
+        <a class="lesson-nav-prev" href="{{ . | relURL }}">← {{ $p.prevTitle }}</a>
+        {{- else }}
+        <span class="lesson-nav-prev is-empty">已经是第一关</span>
+        {{- end }}
+        {{- with $p.nextPath }}
+        <a class="lesson-nav-next" href="{{ . | relURL }}">{{ $p.nextTitle }} →</a>
+        {{- else }}
+        <span class="lesson-nav-next is-empty">全部通关 🏆</span>
+        {{- end }}
+    </nav>
+</article>
+
+{{ partialCached "footer/footer" . }}
+{{- partial "docker/course-data" . -}}
+{{ end }}

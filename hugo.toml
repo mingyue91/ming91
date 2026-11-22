@@ -39,6 +39,7 @@ hasCJKLanguage = true
   [params.widgets]
     homepage = [
       { type = "categories", params = { limit = 10 } },
+      { type = "series", params = { limit = 5 } },
       { type = "tag-cloud", params = { limit = 10 } },
     ]
     page = [{ type = "toc" }]
@@ -83,10 +84,18 @@ hasCJKLanguage = true
       Icon = "home"
 
   [[menu.main]]
+    identifier = "docker"
+    name = "Docker 学习"
+    url = "/docker/"
+    weight = 2
+    [menu.main.params]
+      Icon = "infinity"
+
+  [[menu.main]]
     identifier = "archives"
     name = "归档"
     url = "/archives/"
-    weight = 2
+    weight = 3
     [menu.main.params]
       Icon = "archives"
 
@@ -94,7 +103,7 @@ hasCJKLanguage = true
     identifier = "about"
     name = "关于"
     url = "/about/"
-    weight = 3
+    weight = 4
     [menu.main.params]
       Icon = "user"
 
@@ -110,3 +119,29 @@ hasCJKLanguage = true
 # 每个 RSS 只输出最近 10 篇（配合 layouts/rss.xml 的摘要截断）
 [services.rss]
   limit = 10
+
+# 代码高亮：使用 class 输出，配合主题的明暗色样式
+[markup]
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    lineNumbersInTable = true
+    tabWidth = 4
+    guessSyntax = true
+    codeFences = true
+
+# 图片处理配置：启用 WebP 和 AVIF 现代格式，优化质量与体积
+[imaging]
+  resampleFilter = "lanczos"
+  [imaging.webp]
+    compression = "lossy"
+    quality = 75
+    hint = "photo"
+    method = 4
+  [imaging.avif]
+    compression = "lossy"
+    quality = 55
+    hint = "photo"
+    encoderSpeed = 8
+  [imaging.jpeg]
+    quality = 80

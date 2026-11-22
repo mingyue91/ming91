@@ -1,0 +1,419 @@
+# Docker 学习路径：课程、测验、等级、徽章
+# 改这里即可调整课程结构，页面由 content/docker/_content.gotmpl 自动生成
+
+title: "Docker 学习路径"
+kicker: "🎮 边玩边学 · 12 关通关"
+subtitle: "从「跑起来」到「编排起来」：每关一篇正文 + 一次自测，攒 XP、解锁徽章。"
+
+ranks:
+  - name: "新手上路"
+    xp: 0
+    icon: "🥚"
+  - name: "容器学徒"
+    xp: 120
+    icon: "🐳"
+  - name: "镜像工匠"
+    xp: 300
+    icon: "🔧"
+  - name: "编排达人"
+    xp: 500
+    icon: "🧭"
+  - name: "云原生船长"
+    xp: 700
+    icon: "🚢"
+
+badges:
+  - id: "first-step"
+    name: "初次启航"
+    desc: "通关任意一关"
+    icon: "🚀"
+  - id: "chapter-1"
+    name: "地基完成"
+    desc: "通关第一章"
+    icon: "🧱"
+  - id: "chapter-2"
+    name: "命令达人"
+    desc: "通关第二章"
+    icon: "⌨️"
+  - id: "chapter-3"
+    name: "编排大师"
+    desc: "通关第三章"
+    icon: "🧭"
+  - id: "quiz-master"
+    name: "满分学者"
+    desc: "任意一关自测满分"
+    icon: "🎯"
+  - id: "streak-3"
+    name: "三日不辍"
+    desc: "连续 3 天学习"
+    icon: "🔥"
+  - id: "all-clear"
+    name: "全通关"
+    desc: "通关全部 12 关"
+    icon: "🏆"
+
+chapters:
+  - id: "ch1"
+    title: "第一章 · 容器入门"
+    icon: "🐳"
+    desc: "搞懂镜像、容器和 Dockerfile，把地基打牢。"
+    lessons:
+      - id: "intro"
+        title: "认识 Docker"
+        post: "docker-intro"
+        xp: 50
+        minutes: 10
+        level: "starter"
+        difficulty: "入门"
+        summary: "用「菜谱 / 做好的菜 / 图书馆」的类比串起镜像、容器、仓库三个核心概念，再对照虚拟机理解隔离方式。"
+        objectives:
+          - "说清镜像、容器、仓库三者的分工"
+          - "用一张表对比 Docker 与虚拟机的隔离级别"
+          - "完成安装并跑通 hello-world"
+        quiz:
+          - q: "容器与虚拟机最核心的区别是什么？"
+            options:
+              - "容器共享宿主机内核，虚拟机各自带完整操作系统"
+              - "容器启动通常需要几分钟"
+              - "容器必须运行在虚拟机里"
+              - "容器不支持网络通信"
+            answer: 0
+            explain: "容器是进程级隔离，共享宿主内核，所以启动快、体积小；虚拟机则需要完整的 Guest OS。"
+          - q: "「镜像」的正确定义是？"
+            options:
+              - "镜像的运行实例"
+              - "只读模板，包含应用与运行环境"
+              - "存放镜像的仓库"
+              - "构建镜像的文本文件"
+            answer: 1
+            explain: "镜像是只读模板；容器是镜像运行起来的实例；Dockerfile 才是构建镜像的文本文件。"
+
+      - id: "add-user-to-group"
+        title: "用户组与免 sudo"
+        post: "docker-add-user-to-group"
+        xp: 50
+        minutes: 8
+        level: "starter"
+        difficulty: "入门"
+        summary: "装完 Docker 后老要 sudo？一条组权限命令就能解决，本关顺便讲清楚背后的 socket 权限。"
+        objectives:
+          - "解释为什么普通用户执行 docker 需要 sudo"
+          - "用 usermod 把当前用户加入 docker 组"
+          - "明白重新登录才生效的原因"
+        quiz:
+          - q: "把当前用户加入 docker 组的命令是？"
+            options:
+              - "sudo groupadd docker $USER"
+              - "sudo usermod -aG docker $USER"
+              - "sudo useradd -G docker"
+              - "sudo chown $USER /var/run/docker.sock"
+            answer: 1
+            explain: "-aG 表示「追加到附加组」，不会覆盖用户已有的组。"
+          - q: "加入组之后为什么常常要重新登录？"
+            options:
+              - "Docker 服务必须重启"
+              - "组身份在登录时注入会话，旧会话没有新组"
+              - "必须重新安装 Docker"
+              - "需要重新拉取所有镜像"
+            answer: 1
+            explain: "当前 shell 的组列表在登录时就确定了；新开会话，或执行 newgrp docker 才会生效。"
+
+      - id: "dockerfile-basics"
+        title: "Dockerfile 基础"
+        post: "dockerfile-basics"
+        xp: 50
+        minutes: 12
+        level: "starter"
+        difficulty: "入门"
+        summary: "镜像不是凭空来的，本关把 Dockerfile 的骨架搭起来：基础镜像、依赖、代码、启动命令。"
+        objectives:
+          - "写出一个可构建的最小 Dockerfile"
+          - "理解 FROM / WORKDIR / COPY / RUN / CMD 的分工"
+          - "知道 .dockerignore 的作用"
+        quiz:
+          - q: "WORKDIR 指令的作用是？"
+            options:
+              - "设置后续指令的工作目录"
+              - "复制文件到镜像"
+              - "指定基础镜像"
+              - "声明暴露端口"
+            answer: 0
+            explain: "WORKDIR 之后的 RUN / COPY / CMD 都以该目录为工作目录，目录不存在会自动创建。"
+          - q: "构建镜像并打标签的命令是？"
+            options:
+              - "docker run -t myapp:1.0 ."
+              - "docker build -t myapp:1.0 ."
+              - "docker push myapp:1.0"
+              - "docker commit myapp:1.0"
+            answer: 1
+            explain: "docker build -t 名称:标签 构建上下文路径；docker run 是运行容器。"
+      
+      - id: "dockerfile-reference"
+        title: "Dockerfile 指令详解"
+        post: "dockerfile-reference"
+        xp: 50
+        minutes: 12
+        level: "core"
+        difficulty: "进阶"
+        summary: "指令表就是镜像的「语法书」，本关把最常用的十几条指令用对比表讲透。"
+        objectives:
+          - "区分 COPY 和 ADD 的使用边界"
+          - "用多阶段构建给镜像瘦身"
+          - "掌握 ENTRYPOINT 与 CMD 的组合"
+        quiz:
+          - q: "COPY 和 ADD 的主要区别是？"
+            options:
+              - "两者完全一样"
+              - "ADD 支持 URL 和自动解压本地 tar，COPY 更纯粹"
+              - "COPY 只能复制目录"
+              - "ADD 会加密文件"
+            answer: 1
+            explain: "官方建议优先使用 COPY；需要远程下载或自动解压时再用 ADD。"
+          - q: "多阶段构建通常怎么写？"
+            options:
+              - "FROM ... AS builder，之后 COPY --from=builder"
+              - "RUN --stage 2"
+              - "MULTI FROM a FROM b"
+              - "STAGE build"
+            answer: 0
+            explain: "用命名阶段配合 COPY --from，只把编译产物带进最终镜像，镜像体积能小一个数量级。"
+
+  - id: "ch2"
+    title: "第二章 · 常用命令"
+    icon: "⌨️"
+    desc: "镜像、容器、run 参数、网络与存储，把日常命令练成肌肉记忆。"
+    lessons:
+      - id: "docker-image-commands"
+        title: "镜像管理命令"
+        post: "docker-image-commands"
+        xp: 50
+        minutes: 10
+        level: "core"
+        difficulty: "进阶"
+        summary: "镜像管理是最日常的操作，本关把 images / pull / rmi / build 串成一条流水线。"
+        objectives:
+          - "列出、拉取、删除本地镜像"
+          - "用 docker build 构建并打标签"
+          - "用 history / inspect 排查镜像"
+        quiz:
+          - q: "查看本地已有镜像用？"
+            options:
+              - "docker ps"
+              - "docker images"
+              - "docker info"
+              - "docker inspect"
+            answer: 1
+          - q: "删除本地镜像 nginx 用？"
+            options:
+              - "docker rm nginx"
+              - "docker rmi nginx"
+              - "docker delete nginx"
+              - "docker prune nginx"
+            answer: 1
+            explain: "rmi = remove image；rm 删除的是容器。"
+
+      - id: "docker-container-commands"
+        title: "容器管理命令"
+        post: "docker-container-commands"
+        xp: 50
+        minutes: 10
+        level: "core"
+        difficulty: "进阶"
+        summary: "容器生命周期命令是排障主力，本关把 ps / logs / exec / stop / rm 一次配齐。"
+        objectives:
+          - "启动、停止、删除容器"
+          - "查看日志并进入容器排查"
+          - "区分 docker run 与 docker exec"
+        quiz:
+          - q: "查看正在运行的容器用？"
+            options:
+              - "docker ps"
+              - "docker ps -a"
+              - "docker images"
+              - "docker top"
+            answer: 0
+            explain: "docker ps 只看运行中的容器，加 -a 才会列出已停止的容器。"
+          - q: "进入运行中的容器执行 shell 用？"
+            options:
+              - "docker run -it ubuntu"
+              - "docker exec -it <容器> sh"
+              - "docker attach <容器>"
+              - "docker logs <容器>"
+            answer: 1
+            explain: "exec 在运行中的容器里新起一个进程，退出后容器不受影响；docker run 则会新建容器。"
+
+      - id: "docker-run-parameters"
+        title: "docker run 参数详解"
+        post: "docker-run-parameters"
+        xp: 50
+        minutes: 12
+        level: "core"
+        difficulty: "进阶"
+        summary: "run 参数很多，但高频的就那几个，本关给你一张可随时回查的参数表。"
+        objectives:
+          - "掌握 -d / -p / -v / --name / --restart 常用参数"
+          - "理解端口映射「宿主:容器」的顺序"
+          - "用 --env 传入环境变量"
+        quiz:
+          - q: "-p 8080:80 表示？"
+            options:
+              - "容器 8080 映射到宿主机 80"
+              - "宿主机 8080 映射到容器 80"
+              - "随机分配端口"
+              - "只监听 8080"
+            answer: 1
+            explain: "冒号左边是宿主机端口，右边是容器端口。"
+          - q: "--restart unless-stopped 的含义是？"
+            options:
+              - "只在手动停止时重启"
+              - "异常退出或宿主机重启后自动拉起"
+              - "永不重启"
+              - "每次启动都重建容器"
+            answer: 1
+
+      - id: "docker-storage-network"
+        title: "存储与网络"
+        post: "docker-storage-network"
+        xp: 50
+        minutes: 12
+        level: "core"
+        difficulty: "进阶"
+        summary: "容器不是孤岛，本关讲清楚 bridge 网络、自定义网络和端口映射之间的关系。"
+        objectives:
+          - "查看和创建自定义网络"
+          - "理解同一网络内用容器名互访"
+          - "查看容器端口与挂载信息"
+        quiz:
+          - q: "查看 Docker 网络列表用？"
+            options:
+              - "docker network ls"
+              - "docker net list"
+              - "docker inspect net"
+              - "docker ps --net"
+            answer: 0
+          - q: "同一自定义网络内，容器之间通常怎么访问？"
+            options:
+              - "只能用 IP 地址"
+              - "用容器名 / 服务名做 DNS 解析"
+              - "必须做端口映射"
+              - "不能互访"
+            answer: 1
+            explain: "自定义网络自带 DNS，Compose 里就是直接用服务名访问。"
+
+  - id: "ch3"
+    title: "第三章 · 数据与编排"
+    icon: "🧭"
+    desc: "持久化、Compose、MySQL 实战和生产实践，把零散知识组装成方案。"
+    lessons:
+      - id: "docker-volume-bind-mount"
+        title: "Volume 与 Bind Mount"
+        post: "docker-volume-bind-mount"
+        xp: 50
+        minutes: 12
+        level: "core"
+        difficulty: "进阶"
+        summary: "容器删了数据就没了？本关把数据持久化的两种方式讲清楚。"
+        objectives:
+          - "区分命名卷和绑定挂载"
+          - "用 -v 持久化数据库数据"
+          - "用 docker volume 管理卷"
+        quiz:
+          - q: "命名卷和绑定挂载的核心区别是？"
+            options:
+              - "两者没有区别"
+              - "命名卷由 Docker 管理存放位置，绑定挂载映射宿主机路径"
+              - "绑定挂载不能持久化数据"
+              - "命名卷只能读不能写"
+            answer: 1
+          - q: "查看已有卷用？"
+            options:
+              - "docker volume ls"
+              - "docker ls volume"
+              - "docker df"
+              - "docker inspect -v"
+            answer: 0
+
+      - id: "docker-compose-commands"
+        title: "Docker Compose"
+        post: "docker-compose-commands"
+        xp: 50
+        minutes: 12
+        level: "pro"
+        difficulty: "实战"
+        summary: "多个容器手动启停太累，本关用 Compose 一条命令拉起整个应用栈。"
+        objectives:
+          - "用 compose.yaml 描述多服务应用"
+          - "用 up / down / logs / ps 管理整套服务"
+          - "知道 Compose V2 的推荐文件名"
+        quiz:
+          - q: "后台启动整套服务用？"
+            options:
+              - "docker compose start"
+              - "docker compose up -d"
+              - "docker compose run"
+              - "docker compose build"
+            answer: 1
+          - q: "Compose V2 推荐的项目文件名是？"
+            options:
+              - "compose.yaml"
+              - "Dockerfile"
+              - "compose.ini"
+              - "stack.json"
+            answer: 0
+            explain: "compose.yaml / compose.yml 优先，docker-compose.yml 仍然兼容。"
+
+      - id: "docker-mysql-deploy"
+        title: "部署 MySQL 实战"
+        post: "docker-mysql-deploy"
+        xp: 50
+        minutes: 15
+        level: "pro"
+        difficulty: "实战"
+        summary: "把前面学的镜像、端口、卷组合起来，本关是一次完整的小规模生产级实战。"
+        objectives:
+          - "用官方镜像部署 MySQL 8"
+          - "挂载 /var/lib/mysql 持久化数据"
+          - "用环境变量初始化 root 密码和数据库"
+        quiz:
+          - q: "MySQL 容器的数据目录是？"
+            options:
+              - "/var/lib/mysql"
+              - "/etc/mysql"
+              - "/data"
+              - "/var/www"
+            answer: 0
+          - q: "初始化 root 密码用哪个环境变量？"
+            options:
+              - "MYSQL_PASSWORD"
+              - "MYSQL_ROOT_PASSWORD"
+              - "MYSQL_ADMIN_PWD"
+              - "ROOT_PASSWORD"
+            answer: 1
+
+      - id: "docker-advanced-usage"
+        title: "高级用法与下一步"
+        post: "docker-advanced-usage"
+        xp: 50
+        minutes: 12
+        level: "pro"
+        difficulty: "实战"
+        summary: "入门之后往哪走？本关把生产实践清单和后续学习路线一次交给你。"
+        objectives:
+          - "用 HEALTHCHECK 和资源限制提升稳定性"
+          - "掌握镜像体积优化的常用手段"
+          - "规划下一步学习（K8s / CI / 安全扫描）"
+        quiz:
+          - q: "给容器加健康检查用哪个 Dockerfile 指令？"
+            options:
+              - "HEALTHCHECK"
+              - "CHECK"
+              - "PROBE"
+              - "WATCH"
+            answer: 0
+          - q: "限制容器内存为 512MB 用？"
+            options:
+              - "docker run --memory=512m ..."
+              - "docker run --cpu=512m ..."
+              - "docker run --disk=512m ..."
+              - "docker run --limit=512 ..."
+            answer: 0

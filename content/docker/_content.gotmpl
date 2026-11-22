@@ -1,0 +1,68 @@
+{{- /*
+  内容适配器：根据 data/docker/curriculum.yaml 自动生成课程页
+  - 每关生成 /docker/<lesson-id>/ 页面
+  - 自动计算上一关 / 下一关
+  改课程结构只需改 YAML，无需手动建页面。
+*/ -}}
+{{- $cur := hugo.Data.docker.curriculum -}}
+
+{{- /* 打平所有关卡，记录章节信息 */ -}}
+{{- $all := slice -}}
+{{- range $ci, $ch := $cur.chapters -}}
+    {{- range $li, $l := $ch.lessons -}}
+        {{- $all = $all | append (merge $l (dict
+            "chapterId" $ch.id
+            "chapterTitle" $ch.title
+            "chapterIndex" $ci
+            "lessonIndex" $li
+        )) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $total := len $all -}}
+
+{{- range $i, $l := $all -}}
+    {{- $prev := false -}}
+    {{- if gt $i 0 -}}{{- $prev = index $all (sub $i 1) -}}{{- end -}}
+    {{- $next := false -}}
+    {{- if lt $i (sub $total 1) -}}{{- $next = index $all (add $i 1) -}}{{- end -}}
+
+    {{- $params := dict
+        "lessonId" $l.id
+        "chapterId" $l.chapterId
+        "chapterTitle" $l.chapterTitle
+        "chapterNumber" (add $l.chapterIndex 1)
+        "lessonNumber" (add $i 1)
+        "totalLessons" $total
+        "post" $l.post
+        "xp" $l.xp
+        "minutes" $l.minutes
+        "level" $l.level
+        "difficulty" $l.difficulty
+        "summary" $l.summary
+        "objectives" $l.objectives
+        "quiz" $l.quiz
+    -}}
+
+    {{- with $prev -}}
+        {{- $params = merge $params (dict
+            "prevPath" (printf "docker/%s/" .id)
+            "prevTitle" .title
+        ) -}}
+    {{- end -}}
+    {{- with $next -}}
+        {{- $params = merge $params (dict
+            "nextPath" (printf "docker/%s/" .id)
+            "nextTitle" .title
+        ) -}}
+    {{- end -}}
+
+    {{- $.AddPage (dict
+        "kind" "page"
+        "path" $l.id
+        "title" $l.title
+        "description" $l.summary
+        "content" (dict "mediaType" "text/markdown" "value" $l.summary)
+        "params" $params
+    ) -}}
+{{- end -}}

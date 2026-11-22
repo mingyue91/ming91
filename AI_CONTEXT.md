@@ -1,6 +1,6 @@
 # AI Context — min9's Blog
 
-> 给 AI 助手（和未来的自己）看的项目速查。最后更新：2026-10-24。
+> 给 AI 助手（和未来的自己）看的项目速查。最后更新：2026-11-22。
 
 ## 项目概况
 
@@ -14,13 +14,24 @@
 
 ```
 .
-├── hugo.toml                  # 站点配置：菜单、侧边栏、组件、分类法
+├── hugo.toml                  # 站点配置：菜单、侧边栏、组件、分类法、高亮、图片处理
 ├── content/
-│   ├── posts/                 # 24 篇文章
+│   ├── posts/                 # 23 篇文章
+│   ├── docker/                # Docker 学习路径：_index.md + _content.gotmpl（自动生成课程页）
 │   └── page/                  # 独立页：search（html+json）/ archives（按年归档）/ about
-├── layouts/                   # 覆盖主题的模板（首页 / 404 / 卡片 / 侧边栏 / PDF 按钮）
+├── data/
+│   └── docker/curriculum.yaml # 课程/测验/等级/徽章的唯一数据源
+├── i18n/zh.toml               # 覆盖主题中文词条（新增 widget.series.title）
+├── layouts/                   # 覆盖主题的模板（首页 / 404 / 卡片 / 侧边栏 / PDF 按钮 / 课程页）
+│   ├── docker/                # section.html（课程首页）、page.html（关卡页）
+│   ├── _markup/               # render-codeblock（代码块增强）
+│   └── _partials/docker/      # course-data（注入课程 JSON）
 ├── assets/
-│   ├── scss/custom.scss       # 446 行定制样式
+│   ├── scss/custom.scss       # 1300+ 行定制样式（并 import docker-course.scss）
+│   ├── scss/docker-course.scss
+│   ├── ts/custom.ts           # 站点脚本入口（代码块 + 课程）
+│   ├── ts/docker-course.ts    # 游戏化逻辑（XP/徽章/连击/测验）
+│   ├── ts/gallery.ts          # 覆盖主题 gallery，兼容 <picture>
 │   ├── icons/copy.svg
 │   └── jsconfig.json          # TS 路径别名指向主题 assets
 ├── static/
@@ -118,12 +129,31 @@ draft: false
 | **文章系列**：文章页顶部显示「系列 · 第 N / M 篇 · 上一篇 / 下一篇」，系列落地页 `/series/<名称>/` | `layouts/_partials/article/components/series.html`、`layouts/_partials/article/article.html`、`content/series/*/_index.md`、`assets/scss/custom.scss` |
 | **毛玻璃视觉**：`body` 三团柔光渐变（fixed）+ 中间板块 `backdrop-filter`；浅色/暗色两套 `--glass-*` 变量，移动端降低模糊半径，打印时强制白底 | `assets/scss/custom.scss` |
 | **点状分页**：底部页码改为居中小圆点（当前页为长条），去掉数字页码与跳转弹窗；页数 >5 时中间只留当前页附近 3 个并显示省略条 | `layouts/_partials/pagination.html`、`assets/scss/custom.scss` |
-| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（587 行） |
+| **代码块增强**：语言标签、>6 行自动行号（Chroma 表格）、复制按钮、>30 行折叠；`noClasses = false` 让浅色模式用浅色代码配色 | `layouts/_markup/render-codeblock.html`、`assets/ts/custom.ts`、`assets/scss/custom.scss`、`hugo.toml` |
+| **系列聚合页 + 侧边栏 Widget**：`/series/` 系列卡片；首页侧边栏按文章数显示系列 | `layouts/series/taxonomy.html`、`layouts/_partials/widget/series.html`、`i18n/zh.toml` |
+| **图片优化**：AVIF → WebP → JPG 的 `<picture>` srcset；LQIP blur-up 占位（CSS 变量 `--lqip`）；GIF 跳过转码 | `layouts/_partials/helper/responsive-image.html`、`layouts/_partials/helper/image-placeholder.html`、`layouts/_partials/article/components/header.html`、`assets/ts/gallery.ts`、`hugo.toml`（`[imaging]`） |
+| **Docker 学习路径**：12 关游戏化课程，见下节 | `data/docker/curriculum.yaml`、`content/docker/*`、`layouts/docker/*`、`assets/ts/docker-course.ts`、`assets/scss/docker-course.scss` |
+| 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（1300+ 行） |
 
-主菜单（`hugo.toml`）：首页 `/`、归档 `/archives/`、关于 `/about/`，均带图标。
+主菜单（`hugo.toml`）：首页 `/`、Docker 学习 `/docker/`、归档 `/archives/`、关于 `/about/`，均带图标。
 分类页的导语取自分类 `_index.md` 的 `description` 字段（主题 `list.html` 不渲染 `.Content`）。
 
-`hugo.toml` 中的关键参数：`paginate = 10`、侧边栏头像 `/avatar.jpg`、副标题「二次元 & 技术」、首页组件 `categories` + `tag-cloud`（各 10 条）、文章页组件 `toc`、配色 `scheme = "auto"`。
+`hugo.toml` 中的关键参数：`paginate = 10`、侧边栏头像 `/avatar.jpg`、副标题「二次元 & 技术」、首页组件 `categories` + `series` + `tag-cloud`、文章页组件 `toc`、配色 `scheme = "auto"`；`[markup.highlight] noClasses = false`；`[imaging]` 配置 AVIF/WebP/JPEG 质量。
+
+## Docker 学习路径（游戏化课程）
+
+- **入口**：`/docker/`（主菜单 + 首页顶部横幅）。课程页是「导读 + 自测 + 正文链接」，正文仍留在 `/posts/<slug>/`，两套 URL 互不冲突。
+- **唯一数据源**：`data/docker/curriculum.yaml`（章节、关卡、XP、难度、目标、测验、等级、徽章）。改结构只改这个文件。
+- **自动建页**：`content/docker/_content.gotmpl` 是 Hugo Content Adapter，按 YAML 生成 `/docker/<lesson-id>/` 页面并计算上一关/下一关；不要手建这些 `*.md`。
+- **模板**：`layouts/docker/section.html`（课程首页）、`layouts/docker/page.html`（关卡页）；`_partials/docker/course-data.html` 把课程 JSON 注入页面（`hugo.Data`）。
+- **游戏化规则**（`assets/ts/docker-course.ts`）：
+  - 通关 +50 XP；自测全对额外 +20 XP（历史最佳不倒退）
+  - 等级：0 新手上路 / 120 容器学徒 / 300 镜像工匠 / 500 编排达人 / 700 云原生船长
+  - 徽章：初次启航、地基完成、命令达人、编排大师、满分学者、三日不辍、全通关
+  - 进度存 `localStorage`（键 `docker-course-v1`），首页可「重置进度」
+- **新增一关**：在 YAML 对应章节的 `lessons` 里加 `id / title / post / xp / minutes / level / difficulty / summary / objectives / quiz`，构建即生效；`level` 取值 `starter|core|pro`（对应 chip 样式）。
+- **更新正文引用**：`post` 填 `content/posts` 里的 slug（不含 `.md`），页面会链到 `/posts/<post>/`。
+- **搜索**：`layouts/page/search.json` 已把 `docker` section 纳入索引，课程页也能被站内搜索到。
 
 ## 部署
 
@@ -143,8 +173,10 @@ git add .; git commit -m "msg"; git push
 1. **Hugo 0.161.0 的 `--minify` 有 bug**，构建只用 `hugo`，CI 里也是不带 minify 的。
 2. **中文 `.Summary` 陷阱**：Hugo 按空格分词，中文整段算一个"词"，`.Summary` 会退化成全文（修复前 RSS 单条达 26,000 字符）。生成 RSS/摘要一律用 `description` 或 `| truncate`，别直接用 `.Summary`。
 3. **凭据（2026-11-17 已整改）**：remote URL 已改为无 token 的 `https://github.com/mingyue91/ming91.git`，git push 认证交给 Git Credential Manager（全局 `credential.helper = manager`）托管；已删除 `.github/config/github_token`，`setup-git.ps1` 不再注入 token（仅设置干净 HTTPS）。旧 token `ghp_7DD4…7GIg` 已于 2026-11-17 在 GitHub 网页吊销（整改前只存在于本地，未进 Git 历史、未进文章）；首次 push 如提示登录按 GCM 浏览器流程重新认证。审计命令：`git remote -v`、`git config --get credential.helper`。
-4. `i18n/` 为空目录。
+4. `i18n/zh.toml` 只新增/覆盖少量词条（如 `widget.series.title`），其余仍由主题 `themes/stack/i18n/zh.toml` 提供（Hugo 会合并，不用复制整份）。
 5. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
+6. **不要手建 `content/docker/*.md` 课程页**：它们由 `_content.gotmpl` 生成，手建会与适配器页面冲突（用 `hugo --printPathWarnings` 可查冲突）。
+7. **图片处理缓存**：默认缓存在系统临时目录；若在受限环境里报 `mkdir ... Access is denied`，设置 `$env:HUGO_CACHEDIR` 到项目内再构建（CI 不受影响）。
 
 ## 已修复（留档）
 
@@ -158,6 +190,8 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-11-22（Docker 学习路径）**：新增 `/docker/` 游戏化课程（12 关，Curriculum YAML + Content Adapter 自动建页，XP/等级/徽章/连击/自测全部前端 localStorage）；主菜单与首页横幅入口；站内搜索纳入课程页。
+- **2026-11-22（内容/模板优化）**：代码块增强（语言标签、行号、复制、折叠）；系列聚合页 `/series/` 与侧边栏 Widget；图片 AVIF/WebP `<picture>` + LQIP 占位；修复首页无标签文章 `delimit` 报错；`[markup.highlight]` 改为 class 输出。
 - **2026-11-17（安全）**：移除明文 token —— remote URL 改为无 token HTTPS、删除 `github_token` 文件、`setup-git.ps1` 停止注入 token；旧 token 已在 GitHub 网页吊销。
 - **2026-11-09（清理）**：删掉 `home.html` 里没人用的 `window.__articles` 数组（保留 `window.searchURL`）。
 - **2026-10-27（社交）**：侧边栏新增 Bilibili 图标（`assets/icons/brand-bilibili.svg`，取自 Tabler Icons，线条风格与 GitHub 图标一致），关于页补 Bilibili 链接。

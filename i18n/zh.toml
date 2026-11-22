@@ -1,0 +1,4 @@
+# 继承主题的 zh.toml，只需覆盖/新增需要的键
+[widget]
+    [widget.series]
+        title = "文章系列"

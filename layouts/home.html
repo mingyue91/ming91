@@ -1,4 +1,13 @@
 {{ define "main" }}
+<a class="home-course-banner" href="{{ "docker/" | relURL }}">
+    <span class="banner-icon" aria-hidden="true">🐳</span>
+    <span class="banner-text">
+        <strong>Docker 学习路径</strong>
+        <small>12 关 · 边学边测 · 攒 XP 解锁徽章</small>
+    </span>
+    <span class="banner-arrow" aria-hidden="true">→</span>
+</a>
+
 <div class="search-box">
     <input type="search" id="search-input" placeholder="搜索文章..." aria-label="搜索文章" autocomplete="off" />
     <svg class="search-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
@@ -24,7 +33,7 @@ window.searchURL = '{{ "search/" | relURL | safeJS }}';
     {{ range $index, $element := $paginator.Pages }}
         {{ $cat := index .Params.categories 0 | default "其他" }}
         {{ $pinned := .Params.pinned | default false }}
-        <article class="card" data-category="{{ $cat | lower }}" data-tags="{{ delimit .Params.tags "," }}"{{ if $pinned }} data-pinned="true"{{ end }}>
+        <article class="card" data-category="{{ $cat | lower }}" data-tags="{{ delimit (.Params.tags | default slice) "," }}"{{ if $pinned }} data-pinned="true"{{ end }}>
             {{ partial "article-list/default" . }}
         </article>
     {{ end }}

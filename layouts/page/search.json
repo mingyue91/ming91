@@ -1,0 +1,16 @@
+{{- /* 搜索索引：包含博客文章与 Docker 课程页 */ -}}
+{{- $pages := where .Site.RegularPages "Type" "in" (slice "posts" "docker") -}}
+{{- $result := slice -}}
+
+{{- range $pages -}}
+    {{- $data := dict "title" .Title "date" .Date "permalink" .RelPermalink "content" (.Plain) -}}
+
+    {{- $image := partial "helper/image" (dict "Image" .Params.image "Resources" .Resources "Context" .) -}}
+    {{- if $image -}}
+        {{- $data = merge $data (dict "image" $image.Permalink) -}}
+    {{- end -}}
+
+    {{- $result = $result | append $data -}}
+{{- end -}}
+
+{{ jsonify $result }}

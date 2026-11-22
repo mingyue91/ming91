@@ -1,0 +1,21 @@
+{{- /*
+生成低质量图片占位符 (LQIP) - 用于 blur-up 效果
+Params:
+    Resource: Hugo image resource object
+    Width: 占位符宽度（默认 24px）
+    Format: 输出格式（默认 webp）
+Returns: base64 data URI（无可用图片时返回空字符串）
+*/ -}}
+
+{{- $resource := .Resource -}}
+{{- $width := .Width | default 24 -}}
+{{- $format := .Format | default "webp" -}}
+{{- $mime := dict "webp" "image/webp" "avif" "image/avif" "jpeg" "image/jpeg" "jpg" "image/jpeg" "png" "image/png" -}}
+
+{{- $result := "" -}}
+{{- if and $resource (reflect.IsImageResourceProcessable $resource) -}}
+    {{- $small := $resource.Resize (printf "%dx %s q30" $width $format) -}}
+    {{- $result = printf "data:%s;base64,%s" (index $mime $format) ($small.Content | base64Encode) -}}
+{{- end -}}
+
+{{- return $result -}}

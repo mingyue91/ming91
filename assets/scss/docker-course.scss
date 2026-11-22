@@ -1,0 +1,1046 @@
+/* =========================================================
+   Docker 学习路径（游戏化课程）
+   ========================================================= */
+
+@property --p {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+
+.docker-course-page {
+    --course-green: #22c55e;
+    --course-green-soft: rgba(34, 197, 94, 0.12);
+    --course-blue: #3b82f6;
+    --course-blue-soft: rgba(59, 130, 246, 0.12);
+    --course-purple: #8b5cf6;
+    --course-purple-soft: rgba(139, 92, 246, 0.12);
+    --course-red: #ef4444;
+    --course-gold: #f59e0b;
+    --course-track: rgba(120, 130, 160, 0.22);
+}
+
+[data-scheme="dark"] .docker-course-page {
+    --course-track: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------------- 课程首页 ---------------- */
+
+.docker-course {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.course-hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px;
+    border-radius: 20px;
+    background:
+        radial-gradient(600px 320px at 8% 0%, rgba(59, 130, 246, 0.16), transparent 60%),
+        radial-gradient(520px 300px at 100% 10%, rgba(236, 72, 153, 0.14), transparent 60%),
+        var(--glass-sheen, none),
+        var(--glass-tint, var(--card-background));
+    -webkit-backdrop-filter: var(--glass-filter, none);
+    backdrop-filter: var(--glass-filter, none);
+    border: 1px solid var(--glass-border, var(--card-separator-color));
+    box-shadow: var(--glass-shadow, var(--shadow-l1));
+}
+
+.course-hero-copy {
+    flex: 1 1 320px;
+    min-width: 0;
+}
+
+.course-kicker {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent-color);
+    opacity: 0.85;
+}
+
+.course-title {
+    margin: 0 0 10px;
+    font-size: 2.1rem;
+    line-height: 1.25;
+    color: var(--card-text-color-main);
+}
+
+.course-sub {
+    margin: 0 0 18px;
+    color: var(--card-text-color-secondary);
+    line-height: 1.7;
+}
+
+.course-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.course-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-darker));
+    color: var(--accent-color-text);
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+        color: var(--accent-color-text);
+    }
+}
+
+.course-streak {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--course-gold);
+}
+
+.course-hero-panel {
+    flex: 0 1 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.course-ring {
+    --p: 0%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent-color) 0 var(--p), var(--course-track) var(--p) 100%);
+    display: grid;
+    place-items: center;
+    transition: --p 0.6s ease;
+}
+
+.course-ring-inner {
+    width: 116px;
+    height: 116px;
+    border-radius: 50%;
+    background: var(--card-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: inset 0 0 0 1px var(--card-separator-color);
+
+    strong {
+        font-size: 1.5rem;
+        color: var(--card-text-color-main);
+        font-variant-numeric: tabular-nums;
+    }
+
+    span {
+        font-size: 0.7rem;
+        color: var(--card-text-color-tertiary);
+        letter-spacing: 0.08em;
+    }
+}
+
+.course-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.course-stat {
+    flex: 1 1 80px;
+    min-width: 86px;
+    padding: 10px 8px;
+    border-radius: 12px;
+    background: var(--card-background);
+    border: 1px solid var(--card-separator-color);
+    text-align: center;
+
+    strong {
+        display: block;
+        font-size: 1.05rem;
+        color: var(--card-text-color-main);
+        font-variant-numeric: tabular-nums;
+    }
+
+    span {
+        font-size: 0.7rem;
+        color: var(--card-text-color-tertiary);
+    }
+}
+
+.course-stat-rank strong {
+    font-size: 0.9rem;
+}
+
+.course-next-rank {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--card-text-color-tertiary);
+    text-align: center;
+}
+
+/* 章节 */
+.course-chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.course-chapter {
+    padding: 20px 22px;
+    border-radius: 18px;
+    background: var(--glass-sheen, none), var(--glass-tint, var(--card-background));
+    -webkit-backdrop-filter: var(--glass-filter, none);
+    backdrop-filter: var(--glass-filter, none);
+    border: 1px solid var(--glass-border, var(--card-separator-color));
+    box-shadow: var(--glass-shadow, var(--shadow-l1));
+}
+
+.course-chapter-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px 12px;
+    margin-bottom: 12px;
+}
+
+.course-chapter-title {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--card-text-color-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chapter-icon {
+    font-size: 1.25rem;
+}
+
+.chapter-progress {
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-color);
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+}
+
+.chapter-desc {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--card-text-color-tertiary);
+}
+
+.course-lessons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.course-lesson {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--card-text-color-main);
+    background: color-mix(in srgb, var(--card-background) 55%, transparent);
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        transform: translateX(3px);
+        border-color: color-mix(in srgb, var(--accent-color) 40%, transparent);
+        background: color-mix(in srgb, var(--accent-color) 7%, transparent);
+        color: var(--accent-color);
+    }
+
+    &.is-done {
+        .lesson-status {
+            background: var(--course-green);
+            border-color: var(--course-green);
+            color: #fff;
+        }
+
+        .lesson-title {
+            color: var(--card-text-color-secondary);
+        }
+    }
+}
+
+.lesson-status {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--card-separator-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: transparent;
+    transition: all 0.2s ease;
+}
+
+.lesson-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lesson-title {
+    font-weight: 600;
+    font-size: 0.98rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lesson-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: var(--card-text-color-tertiary);
+}
+
+.lesson-xp {
+    font-weight: 600;
+    color: var(--course-gold);
+}
+
+.lesson-quiz-count {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    color: var(--card-text-color-tertiary);
+    white-space: nowrap;
+}
+
+/* 难度 chip */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.5;
+    background: var(--course-blue-soft);
+    color: var(--course-blue);
+    white-space: nowrap;
+
+    &.chip-starter {
+        background: var(--course-green-soft);
+        color: var(--course-green);
+    }
+
+    &.chip-core {
+        background: var(--course-blue-soft);
+        color: var(--course-blue);
+    }
+
+    &.chip-pro {
+        background: var(--course-purple-soft);
+        color: var(--course-purple);
+    }
+
+    &.chip-xp {
+        background: rgba(245, 158, 11, 0.14);
+        color: var(--course-gold);
+    }
+}
+
+/* 徽章 */
+.course-badges .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.course-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 10px;
+    border-radius: 14px;
+    text-align: center;
+    background: var(--card-background);
+    border: 1px dashed var(--card-separator-color);
+    filter: grayscale(1);
+    opacity: 0.55;
+    transition: all 0.25s ease;
+
+    .badge-icon {
+        font-size: 1.6rem;
+    }
+
+    .badge-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--card-text-color-main);
+    }
+
+    .badge-desc {
+        font-size: 0.7rem;
+        color: var(--card-text-color-tertiary);
+    }
+
+    &.is-earned {
+        filter: none;
+        opacity: 1;
+        border-style: solid;
+        border-color: color-mix(in srgb, var(--course-gold) 55%, transparent);
+        background: linear-gradient(180deg, rgba(245, 158, 11, 0.12), transparent);
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15);
+    }
+}
+
+/* 底部说明 */
+.course-footnote {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--card-text-color-tertiary);
+    padding: 0 4px;
+
+    p {
+        margin: 0;
+    }
+
+    a {
+        color: var(--accent-color);
+    }
+}
+
+.course-reset {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--card-separator-color);
+    background: transparent;
+    color: var(--card-text-color-tertiary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--course-red);
+        color: var(--course-red);
+    }
+}
+
+/* ---------------- 关卡页 ---------------- */
+
+.docker-lesson {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lesson-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--card-text-color-tertiary);
+
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.crumb-sep {
+    opacity: 0.5;
+}
+
+.lesson-header {
+    padding: 22px 24px;
+    border-radius: 18px;
+    background: var(--glass-sheen, none), var(--glass-tint, var(--card-background));
+    -webkit-backdrop-filter: var(--glass-filter, none);
+    backdrop-filter: var(--glass-filter, none);
+    border: 1px solid var(--glass-border, var(--card-separator-color));
+    box-shadow: var(--glass-shadow, var(--shadow-l1));
+}
+
+.lesson-number {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent-color);
+    opacity: 0.8;
+}
+
+.lesson-header .lesson-title {
+    margin: 0 0 12px;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    white-space: normal;
+    color: var(--card-text-color-main);
+}
+
+.lesson-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.lesson-status-text {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--card-text-color-tertiary);
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px dashed var(--card-separator-color);
+
+    &.is-done {
+        color: var(--course-green);
+        border-color: color-mix(in srgb, var(--course-green) 50%, transparent);
+        background: var(--course-green-soft);
+        border-style: solid;
+    }
+}
+
+.lesson-block {
+    padding: 20px 24px;
+    border-radius: 18px;
+    background: var(--glass-sheen, none), var(--glass-tint, var(--card-background));
+    -webkit-backdrop-filter: var(--glass-filter, none);
+    backdrop-filter: var(--glass-filter, none);
+    border: 1px solid var(--glass-border, var(--card-separator-color));
+    box-shadow: var(--glass-shadow, var(--shadow-l1));
+
+    h2 {
+        margin: 0 0 12px;
+        font-size: 1.05rem;
+        color: var(--card-text-color-main);
+
+        small {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--card-text-color-tertiary);
+        }
+    }
+}
+
+.lesson-objectives {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--card-text-color-secondary);
+    line-height: 1.7;
+
+    li::marker {
+        color: var(--accent-color);
+    }
+}
+
+.lesson-summary {
+    margin: 0 0 14px;
+    color: var(--card-text-color-secondary);
+    line-height: 1.8;
+}
+
+.lesson-read-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--accent-color) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+    text-decoration: none;
+    color: var(--card-text-color-main);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent-color);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        color: var(--accent-color);
+    }
+
+    .read-link-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1 1 auto;
+
+        small {
+            font-size: 0.75rem;
+            color: var(--card-text-color-tertiary);
+        }
+    }
+
+    .read-link-arrow {
+        font-size: 1.2rem;
+        color: var(--accent-color);
+    }
+}
+
+/* 自测 */
+.quiz-q {
+    padding: 14px 0;
+    border-top: 1px dashed var(--card-separator-color);
+
+    &:first-of-type {
+        border-top: 0;
+        padding-top: 0;
+    }
+
+    &.is-correct .quiz-prompt {
+        color: var(--course-green);
+    }
+
+    &.is-wrong .quiz-prompt {
+        color: var(--course-red);
+    }
+}
+
+.quiz-prompt {
+    margin: 0 0 10px;
+    font-weight: 600;
+    color: var(--card-text-color-main);
+    line-height: 1.6;
+}
+
+.quiz-index {
+    display: inline-block;
+    min-width: 1.4em;
+    color: var(--accent-color);
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.quiz-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--card-separator-color);
+    background: color-mix(in srgb, var(--card-background) 60%, transparent);
+    cursor: pointer;
+    line-height: 1.6;
+    color: var(--card-text-color-secondary);
+    transition: all 0.15s ease;
+
+    &:hover {
+        border-color: color-mix(in srgb, var(--accent-color) 45%, transparent);
+    }
+
+    input[type="radio"] {
+        margin-top: 0.35em;
+        accent-color: var(--accent-color);
+        flex: 0 0 auto;
+    }
+
+    &.is-answer {
+        border-color: var(--course-green);
+        background: var(--course-green-soft);
+        color: var(--card-text-color-main);
+    }
+
+    &.is-chosen-wrong {
+        border-color: var(--course-red);
+        background: rgba(239, 68, 68, 0.1);
+    }
+}
+
+.quiz-explain {
+    margin: 10px 0 0;
+    padding: 10px 14px;
+    border-left: 3px solid var(--course-blue);
+    border-radius: 6px;
+    background: var(--course-blue-soft);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--card-text-color-secondary);
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.quiz-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn-quiz {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--accent-color);
+    background: transparent;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: color-mix(in srgb, var(--accent-color) 10%, transparent);
+    }
+}
+
+.quiz-result {
+    font-size: 0.85rem;
+    color: var(--card-text-color-secondary);
+
+    &.is-perfect {
+        color: var(--course-green);
+        font-weight: 600;
+    }
+}
+
+.quiz-best {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--card-text-color-tertiary);
+}
+
+/* 完成本关 */
+.lesson-finish {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.08));
+    border: 1px solid color-mix(in srgb, var(--course-green) 35%, transparent);
+}
+
+.course-complete {
+    padding: 12px 28px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(34, 197, 94, 0.4);
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.85;
+    }
+
+    &.is-done {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+}
+
+.lesson-finish-hint {
+    flex: 1 1 240px;
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--card-text-color-secondary);
+}
+
+/* 上一关 / 下一关 */
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+
+    a,
+    span {
+        flex: 1 1 0;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: var(--card-text-color-main);
+        background: var(--card-background);
+        border: 1px solid var(--card-separator-color);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    a:hover {
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    .lesson-nav-next {
+        text-align: right;
+    }
+
+    .is-empty {
+        color: var(--card-text-color-tertiary);
+        opacity: 0.7;
+    }
+}
+
+/* ---------------- Toast / Confetti ---------------- */
+
+.course-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%) translateY(16px);
+    padding: 12px 24px;
+    border-radius: 999px;
+    background: var(--card-background);
+    color: var(--card-text-color-main);
+    border: 1px solid var(--card-separator-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    &.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.course-confetti {
+    position: fixed;
+    top: 0;
+    width: 8px;
+    height: 14px;
+    border-radius: 2px;
+    z-index: 9998;
+    pointer-events: none;
+    animation: course-confetti-fall 1.3s ease-in forwards;
+}
+
+@keyframes course-confetti-fall {
+    0% {
+        transform: translate3d(0, -10vh, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(var(--drift, 0), 105vh, 0) rotate(540deg);
+        opacity: 0;
+    }
+}
+
+/* ---------------- 响应式 ---------------- */
+
+@media (max-width: 767px) {
+    .course-hero {
+        padding: 20px;
+    }
+
+    .course-title {
+        font-size: 1.6rem;
+    }
+
+    .course-hero-panel {
+        flex: 1 1 100%;
+    }
+
+    .course-ring {
+        width: 120px;
+        height: 120px;
+    }
+
+    .course-ring-inner {
+        width: 92px;
+        height: 92px;
+
+        strong {
+            font-size: 1.2rem;
+        }
+    }
+
+    .course-lesson {
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .lesson-quiz-count {
+        display: none;
+    }
+
+    .lesson-number {
+        font-size: 0.72rem;
+    }
+
+    .lesson-header .lesson-title {
+        font-size: 1.4rem;
+    }
+
+    .lesson-header,
+    .lesson-block {
+        padding: 16px;
+    }
+
+    .quiz-best {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .lesson-nav {
+        a,
+        span {
+            white-space: normal;
+        }
+    }
+
+    .lesson-finish {
+        padding: 16px;
+    }
+
+    .course-complete {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .course-confetti {
+        display: none;
+    }
+
+    .course-ring {
+        transition: none;
+    }
+}
+
+/* 打印 */
+@media print {
+    .course-start,
+    .course-complete,
+    .btn-quiz,
+    .course-reset,
+    .lesson-nav,
+    .course-confetti,
+    .course-toast {
+        display: none !important;
+    }
+
+    .docker-course,
+    .docker-lesson {
+        max-width: 100%;
+    }
+
+    .course-hero,
+    .course-chapter,
+    .lesson-header,
+    .lesson-block,
+    .lesson-finish {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        background: #fff !important;
+    }
+}
+
+/* ---------------- 首页课程入口 ---------------- */
+
+.home-course-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--card-text-color-main);
+    background:
+        linear-gradient(120deg, rgba(59, 130, 246, 0.14), rgba(34, 197, 94, 0.12)),
+        var(--card-background);
+    border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+    .banner-icon {
+        font-size: 1.6rem;
+        line-height: 1;
+    }
+
+    .banner-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1 1 auto;
+        min-width: 0;
+
+        strong {
+            font-size: 0.95rem;
+        }
+
+        small {
+            font-size: 0.75rem;
+            color: var(--card-text-color-tertiary);
+        }
+    }
+
+    .banner-arrow {
+        font-size: 1.1rem;
+        color: var(--accent-color);
+        flex: 0 0 auto;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent-color);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        color: var(--accent-color);
+    }
+}
