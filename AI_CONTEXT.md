@@ -17,20 +17,28 @@
 ├── hugo.toml                  # 站点配置：菜单、侧边栏、组件、分类法、高亮、图片处理
 ├── content/
 │   ├── posts/                 # 23 篇文章
-│   ├── docker/                # Docker 学习路径：_index.md + _content.gotmpl（自动生成课程页）
+│   ├── docker/                # Docker 学习路径：_index.md + cards.md + _content.gotmpl（自动生成课程页）
 │   └── page/                  # 独立页：search（html+json）/ archives（按年归档）/ about
 ├── data/
-│   └── docker/curriculum.yaml # 课程/测验/等级/徽章的唯一数据源
+│   └── docker/
+│       ├── curriculum.yaml    # 课程/测验/等级/徽章的唯一数据源
+│       ├── labs.yaml          # 12 关终端任务：命令验收 check + 三级提示
+│       └── cards.yaml         # 36 张知识卡牌 + 卡包概率/保底/碎片
 ├── i18n/zh.toml               # 覆盖主题中文词条（新增 widget.series.title）
 ├── layouts/                   # 覆盖主题的模板（首页 / 404 / 卡片 / 侧边栏 / PDF 按钮 / 课程页）
-│   ├── docker/                # section.html（课程首页）、page.html（关卡页）
+│   ├── docker/                # section.html（课程首页）、page.html（关卡页）、cards.html（卡牌图鉴）
 │   ├── _markup/               # render-codeblock（代码块增强）
-│   └── _partials/docker/      # course-data（注入课程 JSON）
+│   └── _partials/docker/      # course-data / labs-data / cards-data（注入 JSON）
 ├── assets/
 │   ├── scss/custom.scss       # 1300+ 行定制样式（并 import docker-course.scss）
 │   ├── scss/docker-course.scss
 │   ├── ts/custom.ts           # 站点脚本入口（代码块 + 课程）
-│   ├── ts/docker-course.ts    # 游戏化逻辑（XP/徽章/连击/测验）
+│   ├── ts/docker-course.ts    # 课程页面编排（首页/关卡/结算）
+│   ├── ts/docker-state.ts     # 状态与纯逻辑（XP/等级/徽章/星级/卡牌）
+│   ├── ts/docker-sim.ts       # Docker 命令模拟器（状态机 + 断言）
+│   ├── ts/docker-lab.ts       # 终端 UI（任务打勾/提示/历史命令）
+│   ├── ts/docker-cards.ts     # 卡牌掉落/抽卡/图鉴/记忆闪卡
+│   ├── ts/docker-ui.ts        # Toast / 彩纸 / 文案工具
 │   ├── ts/gallery.ts          # 覆盖主题 gallery，兼容 <picture>
 │   ├── icons/copy.svg
 │   └── jsconfig.json          # TS 路径别名指向主题 assets
@@ -132,7 +140,9 @@ draft: false
 | **代码块增强**：语言标签、>6 行自动行号（Chroma 表格）、复制按钮、>30 行折叠；`noClasses = false` 让浅色模式用浅色代码配色 | `layouts/_markup/render-codeblock.html`、`assets/ts/custom.ts`、`assets/scss/custom.scss`、`hugo.toml` |
 | **系列聚合页 + 侧边栏 Widget**：`/series/` 系列卡片；首页侧边栏按文章数显示系列 | `layouts/series/taxonomy.html`、`layouts/_partials/widget/series.html`、`i18n/zh.toml` |
 | **图片优化**：AVIF → WebP → JPG 的 `<picture>` srcset；LQIP blur-up 占位（CSS 变量 `--lqip`）；GIF 跳过转码 | `layouts/_partials/helper/responsive-image.html`、`layouts/_partials/helper/image-placeholder.html`、`layouts/_partials/article/components/header.html`、`assets/ts/gallery.ts`、`hugo.toml`（`[imaging]`） |
-| **Docker 学习路径**：12 关游戏化课程，见下节 | `data/docker/curriculum.yaml`、`content/docker/*`、`layouts/docker/*`、`assets/ts/docker-course.ts`、`assets/scss/docker-course.scss` |
+| **Docker 学习路径**：12 关课程框架（章节、XP、等级、徽章、连击、自测），见下节 | `data/docker/curriculum.yaml`、`content/docker/*`、`layouts/docker/section.html`、`page.html`、`assets/ts/docker-course.ts`、`docker-state.ts` |
+| **终端实验室**：网页里的 Docker 模拟终端，敲命令达成目标才通关；任务自动打勾、三级提示、步数评分、星级 | `data/docker/labs.yaml`、`layouts/docker/page.html`、`assets/ts/docker-sim.ts`、`docker-lab.ts` |
+| **卡牌图鉴**：通关掉主题卡，2★+/满分开卡包，稀有度/保底/碎片合成，记忆闪卡复习 | `data/docker/cards.yaml`、`layouts/docker/cards.html`、`content/docker/cards.md`、`assets/ts/docker-cards.ts` |
 | 定制样式（搜索框、分类胶囊、卡片 hover、PDF 按钮、打印样式、系列卡片、移动端适配） | `assets/scss/custom.scss`（1300+ 行） |
 
 主菜单（`hugo.toml`）：首页 `/`、Docker 学习 `/docker/`、归档 `/archives/`、关于 `/about/`，均带图标。
@@ -140,20 +150,26 @@ draft: false
 
 `hugo.toml` 中的关键参数：`paginate = 10`、侧边栏头像 `/avatar.jpg`、副标题「二次元 & 技术」、首页组件 `categories` + `series` + `tag-cloud`、文章页组件 `toc`、配色 `scheme = "auto"`；`[markup.highlight] noClasses = false`；`[imaging]` 配置 AVIF/WebP/JPEG 质量。
 
-## Docker 学习路径（游戏化课程）
+## Docker 学习路径（课程 + 终端 + 卡牌）
 
-- **入口**：`/docker/`（主菜单 + 首页顶部横幅）。课程页是「导读 + 自测 + 正文链接」，正文仍留在 `/posts/<slug>/`，两套 URL 互不冲突。
-- **唯一数据源**：`data/docker/curriculum.yaml`（章节、关卡、XP、难度、目标、测验、等级、徽章）。改结构只改这个文件。
-- **自动建页**：`content/docker/_content.gotmpl` 是 Hugo Content Adapter，按 YAML 生成 `/docker/<lesson-id>/` 页面并计算上一关/下一关；不要手建这些 `*.md`。
-- **模板**：`layouts/docker/section.html`（课程首页）、`layouts/docker/page.html`（关卡页）；`_partials/docker/course-data.html` 把课程 JSON 注入页面（`hugo.Data`）。
-- **游戏化规则**（`assets/ts/docker-course.ts`）：
-  - 通关 +50 XP；自测全对额外 +20 XP（历史最佳不倒退）
-  - 等级：0 新手上路 / 120 容器学徒 / 300 镜像工匠 / 500 编排达人 / 700 云原生船长
-  - 徽章：初次启航、地基完成、命令达人、编排大师、满分学者、三日不辍、全通关
-  - 进度存 `localStorage`（键 `docker-course-v1`），首页可「重置进度」
-- **新增一关**：在 YAML 对应章节的 `lessons` 里加 `id / title / post / xp / minutes / level / difficulty / summary / objectives / quiz`，构建即生效；`level` 取值 `starter|core|pro`（对应 chip 样式）。
-- **更新正文引用**：`post` 填 `content/posts` 里的 slug（不含 `.md`），页面会链到 `/posts/<post>/`。
-- **搜索**：`layouts/page/search.json` 已把 `docker` section 纳入索引，课程页也能被站内搜索到。
+- **入口**：`/docker/`（主菜单 + 首页顶部横幅）；卡牌图鉴在 `/docker/cards/`。课程页负责「导读 + 实战终端 + 自测」，正文仍留在 `/posts/<slug>/`，两套 URL 互不冲突。
+- **三份数据源**（改内容只改 YAML）：
+  - `data/docker/curriculum.yaml`：章节、关卡、XP、难度、目标、测验、等级、徽章
+  - `data/docker/labs.yaml`：每关终端任务 —— `brief`、`init`（预置镜像/卷/网络/compose/权限）、`tasks[].check` 验收、`hints` 三级提示、`referenceSteps` 参考步数
+  - `data/docker/cards.yaml`：36 张知识卡（category、rarity、lesson、summary、command）+ 卡包权重/保底/碎片
+- **自动建页**：`content/docker/_content.gotmpl` 生成 `/docker/<lesson-id>/` 并计算上下关；**不要手建课程 md**。
+- **玩法规则**：
+  - 主路径：在模拟终端完成任务 → 结算；速通路径：自测满分也能结算（但没有星级）
+  - 星级：0 提示且步数 ≤ referenceSteps → ★★★；≤1 提示且步数 ≤ 2× → ★★☆；其余 ★☆☆
+  - XP：通关 +50；自测全对再 +20（历史最佳不倒退）
+  - 掉卡：首次通关必掉该关主题卡；★★ 以上通关或自测满分 +1 卡包；重复卡转碎片，5 碎片合成一张未拥有卡
+  - 等级 5 档（0/120/300/500/700）；徽章 9 枚（新增 图鉴收藏家=10 张卡、终端老手=5 关三星）
+  - 卡包概率 普通 60 / 稀有 30 / 史诗 9 / 传说 1，连续 9 次未出史诗触发保底
+  - 状态存 `localStorage`（键 `docker-course-v1`），旧版状态缺 `cards` 字段会自动补默认值
+- **模拟器支持**：`images / pull / rmi / tag / build / run / ps / stop / start / rm / logs / exec / inspect`、`volume ls/create/rm`、`network ls/create/connect`、`compose up/down/ps/logs`，以及 `usermod -aG docker` / `newgrp docker`；未支持命令会给出友好提示。
+- **新增一关**：curriculum 加 lesson → labs.yaml 加同名 key 的 tasks/hints → cards.yaml 加至少一张 `lesson: <id>` 的卡。
+- **新增卡牌**：往 cards.yaml 的 `items` 里加条目即可，图鉴按 category 自动分组。
+- **搜索**：`layouts/page/search.json` 已把课程页与图鉴页纳入索引。
 
 ## 部署
 
@@ -177,6 +193,8 @@ git add .; git commit -m "msg"; git push
 5. `public/`、`resources/_gen/`、`.hugo_build.lock` 已被 gitignore，不要提交。
 6. **不要手建 `content/docker/*.md` 课程页**：它们由 `_content.gotmpl` 生成，手建会与适配器页面冲突（用 `hugo --printPathWarnings` 可查冲突）。
 7. **图片处理缓存**：默认缓存在系统临时目录；若在受限环境里报 `mkdir ... Access is denied`，设置 `$env:HUGO_CACHEDIR` 到项目内再构建（CI 不受影响）。
+8. **终端进度不持久化**：模拟终端状态只存在内存里，刷新页面会重置任务清单（已通关/星级/卡牌仍保存在 localStorage）。这是有意的：避免把一次性的终端状态写进存储。
+9. **课程数据可篡改**：XP、星级、卡牌都在 localStorage，用户可自行修改；纯学习场景可接受，不要当成绩单。
 
 ## 已修复（留档）
 
@@ -190,6 +208,7 @@ git add .; git commit -m "msg"; git push
 
 ## 更新记录
 
+- **2026-11-23（终端闯关 + 卡牌图鉴）**：每关新增网页版 Docker 模拟终端（`docker-sim.ts`，支持镜像/容器/卷/网络/Compose 子集 + 权限演练），任务达成才能结算，按提示/步数评 1–3 星；新增 36 张知识卡牌、卡包掉落、稀有度保底、碎片合成与记忆闪卡图鉴页 `/docker/cards/`；徽章扩到 9 枚；保留自测速通路径。jsdom 集成测试覆盖终端通关、掉卡、开包、合成、闪卡、旧状态迁移。
 - **2026-11-22（Docker 学习路径）**：新增 `/docker/` 游戏化课程（12 关，Curriculum YAML + Content Adapter 自动建页，XP/等级/徽章/连击/自测全部前端 localStorage）；主菜单与首页横幅入口；站内搜索纳入课程页。
 - **2026-11-22（内容/模板优化）**：代码块增强（语言标签、行号、复制、折叠）；系列聚合页 `/series/` 与侧边栏 Widget；图片 AVIF/WebP `<picture>` + LQIP 占位；修复首页无标签文章 `delimit` 报错；`[markup.highlight]` 改为 class 输出。
 - **2026-11-17（安全）**：移除明文 token —— remote URL 改为无 token HTTPS、删除 `github_token` 文件、`setup-git.ps1` 停止注入 token；旧 token 已在 GitHub 网页吊销。

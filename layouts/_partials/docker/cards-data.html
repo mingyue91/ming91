@@ -1,0 +1,5 @@
+{{- /* 卡牌数据：packs 配置 + items 卡池 */ -}}
+{{- $cards := hugo.Data.docker.cards | default dict -}}
+{{- $json := $cards | jsonify -}}
+{{- $json = replace $json "</" "<\\/" -}}
+<script type="application/json" id="docker-cards-data">{{ $json | safeJS }}</script>

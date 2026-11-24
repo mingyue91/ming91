@@ -3,7 +3,7 @@
 
 title: "Docker 学习路径"
 kicker: "🎮 边玩边学 · 12 关通关"
-subtitle: "从「跑起来」到「编排起来」：每关一篇正文 + 一次自测，攒 XP、解锁徽章。"
+subtitle: "从「跑起来」到「编排起来」：每关一篇正文 + 一个模拟终端任务，攒 XP、拿星级、收卡牌。"
 
 ranks:
   - name: "新手上路"
@@ -51,6 +51,14 @@ badges:
     name: "全通关"
     desc: "通关全部 12 关"
     icon: "🏆"
+  - id: "card-collector"
+    name: "图鉴收藏家"
+    desc: "收集 10 张卡牌"
+    icon: "🃏"
+  - id: "terminal-ace"
+    name: "终端老手"
+    desc: "5 关三星通关"
+    icon: "⌨️"
 
 chapters:
   - id: "ch1"

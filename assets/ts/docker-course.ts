@@ -1,230 +1,44 @@
 /**
- * Docker 学习路径：游戏化逻辑
- * - XP / 等级 / 徽章 / 连续学习天数
- * - 课程页进度、继续学习
- * - 关卡自测评分与完成
- * 状态保存在 localStorage，纯前端。
+ * Docker 学习路径：页面逻辑
+ * - 课程首页：进度、等级、星级、卡牌收集
+ * - 关卡页：终端任务 + 自测 + 结算（XP / 星级 / 掉卡）
+ * - 图鉴页：由 docker-cards.ts 接管
  */
 
-const STORAGE_KEY = 'docker-course-v1';
-const QUIZ_BONUS_XP = 20;
+import { initLab, type LabApi } from './docker-lab';
+import { addCard, initCardsPage, lessonDrop, packsForStars, readCardsData, revealCard, type CardsData } from './docker-cards';
+import {
+    QUIZ_BONUS_XP,
+    commit,
+    currentRank,
+    flattenLessons,
+    lessonXp,
+    loadState,
+    readCurriculum,
+    saveState,
+    todayKey,
+    totalXp,
+    touchStreak,
+    type Badge,
+    type Curriculum,
+    type Lesson,
+} from './docker-state';
+import { burstConfetti, celebrateBadges, setText as setTextSafe, showToast } from './docker-ui';
+import type { LabSpec } from './docker-sim';
 
-interface QuizQuestion {
-    q: string;
-    options: string[];
-    answer: number;
-    explain?: string;
-}
-
-interface Lesson {
-    id: string;
-    title: string;
-    xp: number;
-    minutes: number;
-    quiz?: QuizQuestion[];
-}
-
-interface Chapter {
-    id: string;
-    title: string;
-    icon?: string;
-    lessons: Lesson[];
-}
-
-interface Rank {
-    name: string;
-    xp: number;
-    icon?: string;
-}
-
-interface Badge {
-    id: string;
-    name: string;
-    desc: string;
-    icon: string;
-}
-
-interface Curriculum {
-    chapters: Chapter[];
-    ranks: Rank[];
-    badges: Badge[];
-}
-
-interface LessonState {
-    done?: boolean;
-    quizBest?: number;
-    day?: string;
-}
-
-interface State {
-    lessons: Record<string, LessonState>;
-    streak: { count: number; last: string };
-    badges: string[];
-}
-
-function emptyState(): State {
-    return { lessons: {}, streak: { count: 0, last: '' }, badges: [] };
-}
-
-function readCurriculum(): Curriculum | null {
-    const el = document.getElementById('docker-course-data');
-    if (!el) return null;
+function readLabs(): Record<string, LabSpec> {
+    const el = document.getElementById('docker-labs-data');
+    if (!el) return {};
     try {
-        return JSON.parse(el.textContent || '{}') as Curriculum;
-    } catch (err) {
-        console.error('[docker-course] 课程数据解析失败', err);
-        return null;
-    }
-}
-
-function loadState(): State {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return emptyState();
-        const parsed = JSON.parse(raw) as State;
-        return {
-            lessons: parsed.lessons || {},
-            streak: parsed.streak || { count: 0, last: '' },
-            badges: Array.isArray(parsed.badges) ? parsed.badges : [],
-        };
+        return JSON.parse(el.textContent || '{}') as Record<string, LabSpec>;
     } catch {
-        return emptyState();
+        return {};
     }
 }
 
-function saveState(state: State) {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch {
-        /* 隐私模式下静默失败，仅本次会话有效 */
-    }
-}
-
-function todayKey(date = new Date()): string {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-}
-
-function previousDayKey(key: string): string {
-    const date = new Date(`${key}T00:00:00`);
-    date.setDate(date.getDate() - 1);
-    return todayKey(date);
-}
-
-function flattenLessons(cur: Curriculum): Lesson[] {
-    const all: Lesson[] = [];
-    cur.chapters.forEach(ch => ch.lessons.forEach(l => all.push(l)));
-    return all;
-}
-
-function lessonXp(lesson: Lesson, state: State): number {
-    const st = state.lessons[lesson.id];
-    if (!st) return 0;
-    let xp = st.done ? lesson.xp : 0;
-    if (st.quizBest === 100) xp += QUIZ_BONUS_XP;
-    return xp;
-}
-
-function totalXp(cur: Curriculum, state: State): number {
-    return flattenLessons(cur).reduce((sum, l) => sum + lessonXp(l, state), 0);
-}
-
-function currentRank(cur: Curriculum, xp: number): { rank: Rank; next?: Rank } {
-    const ranks = [...cur.ranks].sort((a, b) => a.xp - b.xp);
-    let rank = ranks[0];
-    let next: Rank | undefined;
-    for (const r of ranks) {
-        if (xp >= r.xp) rank = r;
-        else { next = r; break; }
-    }
-    return { rank, next };
-}
-
-function earnedBadges(cur: Curriculum, state: State): string[] {
-    const ids = new Set<string>();
-    const done = new Set(Object.keys(state.lessons).filter(id => state.lessons[id].done));
-
-    if (done.size > 0) ids.add('first-step');
-
-    cur.chapters.forEach((ch, index) => {
-        if (ch.lessons.length && ch.lessons.every(l => done.has(l.id))) {
-            ids.add(`chapter-${index + 1}`);
-        }
-    });
-
-    if (Object.values(state.lessons).some(s => s.quizBest === 100)) ids.add('quiz-master');
-    if (state.streak.count >= 3) ids.add('streak-3');
-
-    const total = flattenLessons(cur).length;
-    if (total > 0 && done.size >= total) ids.add('all-clear');
-
-    return [...ids];
-}
-
-function touchStreak(state: State) {
-    const today = todayKey();
-    if (state.streak.last === today) return;
-    if (state.streak.last && state.streak.last === previousDayKey(today)) {
-        state.streak.count += 1;
-    } else {
-        state.streak.count = 1;
-    }
-    state.streak.last = today;
-}
-
-/** 保存状态并结算新徽章，返回新解锁的徽章 */
-function commit(cur: Curriculum, state: State): Badge[] {
-    const earned = earnedBadges(cur, state);
-    const newIds = earned.filter(id => !state.badges.includes(id));
-    state.badges = earned;
-    saveState(state);
-    return cur.badges.filter(b => newIds.includes(b.id));
-}
-
-function setText(selector: string, text: string) {
-    const el = document.querySelector(selector);
-    if (el) el.textContent = text;
-}
-
-function showToast(message: string) {
-    const old = document.querySelector('.course-toast');
-    if (old) old.remove();
-
-    const toast = document.createElement('div');
-    toast.className = 'course-toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => toast.classList.add('show'));
-    window.setTimeout(() => {
-        toast.classList.remove('show');
-        window.setTimeout(() => toast.remove(), 300);
-    }, 2200);
-}
-
-function burstConfetti() {
-    const colors = ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6'];
-    for (let i = 0; i < 28; i++) {
-        const bit = document.createElement('span');
-        bit.className = 'course-confetti';
-        bit.style.left = `${Math.random() * 100}vw`;
-        bit.style.background = colors[i % colors.length];
-        bit.style.animationDelay = `${Math.random() * 0.25}s`;
-        bit.style.setProperty('--drift', `${(Math.random() - 0.5) * 120}px`);
-        document.body.appendChild(bit);
-        window.setTimeout(() => bit.remove(), 1600);
-    }
-}
-
-function celebrateNewBadges(badges: Badge[]) {
-    badges.forEach((badge, index) => {
-        window.setTimeout(() => {
-            showToast(`🏅 解锁徽章：${badge.icon} ${badge.name}`);
-        }, index * 900);
-    });
-    if (badges.length) burstConfetti();
+function starText(stars: number): string {
+    if (!stars) return '';
+    return '★'.repeat(stars) + '☆'.repeat(3 - stars);
 }
 
 /* ---------------- 课程首页 ---------------- */
@@ -241,16 +55,23 @@ function initHome(cur: Curriculum) {
     const ring = document.querySelector<HTMLElement>('[data-course-ring]');
     if (ring) ring.style.setProperty('--p', `${percent}%`);
 
-    setText('[data-course-percent]', `${percent}%`);
-    setText('[data-course-xp]', String(xp));
-    setText('[data-course-done]', `${done}/${total}`);
-    setText('[data-course-rank]', `${rank.icon || ''} ${rank.name}`.trim());
-    setText('[data-course-streak]', `🔥 连续 ${state.streak.count} 天`);
+    setTextSafe('[data-course-percent]', `${percent}%`);
+    setTextSafe('[data-course-xp]', String(xp));
+    setTextSafe('[data-course-done]', `${done}/${total}`);
+    setTextSafe('[data-course-rank]', `${rank.icon || ''} ${rank.name}`.trim());
+    setTextSafe('[data-course-streak]', `🔥 连续 ${state.streak.count} 天`);
+
+    const cardsData = readCardsData();
+    const ownedCount = Object.keys(state.cards.owned).length;
+    if (cardsData) {
+        setTextSafe('[data-course-cards]', `${ownedCount}/${cardsData.items.length}`);
+    }
+    setTextSafe('[data-course-packs]', String(state.cards.packs));
 
     if (next) {
-        setText('[data-course-next-rank]', `距离「${next.icon || ''} ${next.name}」还差 ${next.xp - xp} XP`);
+        setTextSafe('[data-course-next-rank]', `距离「${next.icon || ''} ${next.name}」还差 ${next.xp - xp} XP`);
     } else {
-        setText('[data-course-next-rank]', '已达成最高等级，继续巩固吧 🚢');
+        setTextSafe('[data-course-next-rank]', '已达成最高等级，继续巩固吧 🚢');
     }
 
     // 关卡状态
@@ -261,6 +82,8 @@ function initHome(cur: Curriculum) {
         item.classList.toggle('is-done', Boolean(st?.done));
         const status = item.querySelector<HTMLElement>('.lesson-status');
         if (status) status.textContent = st?.done ? '✓' : '';
+        const stars = item.querySelector<HTMLElement>('.lesson-stars');
+        if (stars && st?.stars) stars.textContent = starText(st.stars);
         if (st?.quizBest !== undefined) {
             const quizCount = item.querySelector<HTMLElement>('.lesson-quiz-count');
             if (quizCount) quizCount.textContent = `📝 最佳 ${st.quizBest} 分`;
@@ -293,8 +116,13 @@ function initHome(cur: Curriculum) {
 
     // 重置
     document.querySelector<HTMLButtonElement>('[data-course-reset]')?.addEventListener('click', () => {
-        if (!window.confirm('确定要清空本地学习进度吗？该操作不可恢复。')) return;
-        saveState(emptyState());
+        if (!window.confirm('确定要清空本地学习进度（含卡牌与星级）吗？该操作不可恢复。')) return;
+        saveState({
+            lessons: {},
+            streak: { count: 0, last: '' },
+            badges: [],
+            cards: { owned: {}, packs: 0, pity: 0, fragments: 0 },
+        });
         window.location.reload();
     });
 }
@@ -316,31 +144,64 @@ function initLesson(cur: Curriculum) {
     const completeBtn = root.querySelector<HTMLButtonElement>('[data-course-complete]');
     const finishHint = root.querySelector<HTMLElement>('[data-finish-hint]');
     const statusText = root.querySelector<HTMLElement>('[data-lesson-status]');
+    const starsEl = root.querySelector<HTMLElement>('[data-lesson-stars]');
+
+    const labs = readLabs();
+    const labSpec = labs[id];
+    const cardsData: CardsData | null = readCardsData();
+
+    let labApi: LabApi | null = null;
+
+    const labResult = () => (labApi ? labApi.getResult() : { passed: true, stars: 0, steps: 0, hints: 0, referenceSteps: 0 });
 
     const refreshLessonUi = () => {
         const st = state.lessons[id] || {};
+        const result = labResult();
+        const quizFast = st.quizBest === 100;
+        const ready = result.passed || quizFast;
+
         if (statusText) {
             statusText.textContent = st.done ? '已通关' : '未通关';
             statusText.classList.toggle('is-done', Boolean(st.done));
         }
+        if (starsEl) {
+            const stars = st.stars || 0;
+            starsEl.textContent = stars ? starText(stars) : '';
+            starsEl.classList.toggle('is-empty', !stars);
+        }
         if (completeBtn) {
+            completeBtn.classList.remove('is-done');
             if (st.done) {
-                completeBtn.textContent = '✓ 已通关';
-                completeBtn.disabled = true;
-                completeBtn.classList.add('is-done');
-            } else {
-                completeBtn.textContent = `完成本关 · +${lesson.xp} XP`;
+                if (result.passed && result.stars > (st.stars || 0)) {
+                    completeBtn.textContent = `刷新星级 · ${starText(result.stars)}`;
+                    completeBtn.disabled = false;
+                } else {
+                    completeBtn.textContent = `✓ 已通关${st.stars ? ` · ${starText(st.stars)}` : ''}`;
+                    completeBtn.disabled = true;
+                    completeBtn.classList.add('is-done');
+                }
+            } else if (result.passed) {
+                completeBtn.textContent = `结算本关 · +${lesson.xp} XP${result.stars ? ` · ${starText(result.stars)}` : ''}`;
                 completeBtn.disabled = false;
-                completeBtn.classList.remove('is-done');
+            } else if (quizFast) {
+                completeBtn.textContent = `自测速通 · +${lesson.xp} XP`;
+                completeBtn.disabled = false;
+            } else {
+                completeBtn.textContent = '完成终端任务或自测满分后结算';
+                completeBtn.disabled = true;
             }
         }
         if (finishHint) {
             if (st.done) {
-                finishHint.textContent = st.quizBest === 100
-                    ? `本关已拿满 ${lesson.xp + bonus} XP，去下一关吧！`
-                    : `本关已获得 ${lesson.xp} XP；自测全对还能额外 +${bonus} XP。`;
+                finishHint.textContent = st.stars
+                    ? `本关 ${starText(st.stars)} 通关，获得 ${lesson.xp} XP${st.quizBest === 100 ? ` + ${bonus} XP 自测奖励` : ''}。`
+                    : `本关已通关；重玩终端并达成三星可以刷新星级。`;
+            } else if (result.passed) {
+                finishHint.textContent = `任务完成！结算可得 ${lesson.xp} XP；提示越少、步数越少，星级越高。`;
+            } else if (quizFast) {
+                finishHint.textContent = `自测满分，可以直接速通结算；想拿星级和卡包就去完成终端任务。`;
             } else {
-                finishHint.textContent = `完成本关即可获得 ${lesson.xp} XP；自测全对再额外 +${bonus} XP。`;
+                finishHint.textContent = `完成左侧终端任务，或把自测做到满分，即可结算。自测全对额外 +${bonus} XP。`;
             }
         }
         const bestEl = root.querySelector<HTMLElement>('[data-quiz-best]');
@@ -349,18 +210,61 @@ function initLesson(cur: Curriculum) {
         }
     };
 
-    // 完成本关
+    if (labSpec) {
+        labApi = initLab({
+            lab: labSpec,
+            onChange: () => refreshLessonUi(),
+        });
+    }
+
+    const grantRewards = (stars: number) => {
+        if (!cardsData) return;
+        const theme = lessonDrop(cardsData, id, state);
+        let packs = packsForStars(stars);
+        if (state.lessons[id]?.quizBest === 100) packs += 1;
+
+        if (theme) addCard(state, cardsData, theme);
+        state.cards.packs += packs;
+        saveState(state);
+
+        const bits: string[] = [];
+        if (theme) bits.push(`获得卡牌「${theme.name}」`);
+        if (packs) bits.push(`卡包 +${packs}`);
+        if (bits.length) showToast(bits.join(' · '));
+
+        if (theme) {
+            void revealCard(theme, { subtitle: '首次通关掉落' });
+        }
+    };
+
+    // 结算
     completeBtn?.addEventListener('click', () => {
         const st = lessonState();
-        if (st.done) return;
+        const result = labResult();
+        const newBadges: Badge[] = [];
+
+        if (st.done) {
+            if (result.passed && result.stars > (st.stars || 0)) {
+                st.stars = result.stars;
+                saveState(state);
+                showToast(`星级刷新为 ${starText(result.stars)} ✨`);
+                refreshLessonUi();
+            }
+            return;
+        }
+
         st.done = true;
         st.day = todayKey();
+        if (result.passed && result.stars) st.stars = result.stars;
         touchStreak(state);
-        const newBadges = commit(cur, state);
+        newBadges.push(...commit(cur, state));
+
+        const stars = st.stars || 0;
+        grantRewards(stars);
         refreshLessonUi();
-        showToast(`🎉 通关！+${lesson.xp} XP`);
+        showToast(`🎉 通关！+${lesson.xp} XP${stars ? ` · ${starText(stars)}` : ''}`);
         burstConfetti();
-        celebrateNewBadges(newBadges);
+        celebrateBadges(newBadges);
     });
 
     // 自测
@@ -433,7 +337,11 @@ function initLesson(cur: Curriculum) {
                 if (score > prevBest) st.quizBest = score;
                 if (isPerfect && prevBest < 100) {
                     st.quizBest = 100;
-                    showToast(`🎯 满分通关！+${bonus} XP`);
+                    showToast(`🎯 自测满分！+${bonus} XP`);
+                    if (cardsData) {
+                        state.cards.packs += 1;
+                        saveState(state);
+                    }
                 }
                 newBadges = commit(cur, state);
                 refreshLessonUi();
@@ -448,7 +356,7 @@ function initLesson(cur: Curriculum) {
 
             if (submitBtn) submitBtn.textContent = '再测一次';
             graded = true;
-            celebrateNewBadges(newBadges);
+            celebrateBadges(newBadges);
         };
 
         submitBtn?.addEventListener('click', () => {
@@ -466,6 +374,8 @@ function initLesson(cur: Curriculum) {
 /* ---------------- 入口 ---------------- */
 
 export function initDockerCourse() {
+    if (initCardsPage()) return;
+
     const cur = readCurriculum();
     if (!cur) return;
 
@@ -476,18 +386,11 @@ export function initDockerCourse() {
     }
 }
 
-/**
- * 纯函数出口，便于自动化测试（不影响页面运行时）
- */
 export const __courseInternals = {
-    emptyState,
     loadState,
-    todayKey,
-    previousDayKey,
     flattenLessons,
-    lessonXp,
     totalXp,
     currentRank,
-    earnedBadges,
-    touchStreak,
+    lessonXp,
+    starText,
 };

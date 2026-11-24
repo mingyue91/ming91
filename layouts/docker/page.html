@@ -22,6 +22,7 @@
             <span class="chip">⏱ {{ $p.minutes }} 分钟</span>
             <span class="chip chip-xp">+{{ $p.xp }} XP</span>
             <span class="lesson-status-text" data-lesson-status>未通关</span>
+            <span class="lesson-stars" data-lesson-stars></span>
         </div>
     </header>
 
@@ -47,9 +48,45 @@
         </a>
     </section>
 
+    {{- $lab := index (hugo.Data.docker.labs | default dict) $p.lessonId -}}
+    {{- with $lab }}
+    <section class="lesson-block lesson-lab" data-lab>
+        <h2>🕹 任务终端 <small>（模拟环境，随便敲，不会影响真实机器）</small></h2>
+        {{- with .brief }}<p class="lab-brief">{{ . }}</p>{{ end }}
+        <ul class="lab-tasks">
+            {{- range $ti, $task := .tasks }}
+            <li class="lab-task" data-lab-task="{{ $ti }}">
+                <span class="lab-task-mark" aria-hidden="true">○</span>
+                <span class="lab-task-label">{{ $task.label }}</span>
+            </li>
+            {{- end }}
+        </ul>
+        <div class="lab-terminal">
+            <div class="lab-term-bar">
+                <span class="lab-term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="lab-term-title">docker-lab — bash</span>
+                <span class="lab-term-status" data-lab-status>⏳ 完成左侧任务即可结算</span>
+            </div>
+            <div class="lab-output" data-lab-output tabindex="0" role="log" aria-live="polite" aria-label="终端输出"></div>
+            <form class="lab-input-row" data-lab-form>
+                <span class="lab-prompt" aria-hidden="true">$</span>
+                <input class="lab-input" data-lab-input type="text" autocomplete="off" autocapitalize="off"
+                       spellcheck="false" aria-label="输入 docker 命令" placeholder="输入 docker 命令，回车执行">
+                <button class="lab-run" type="submit">运行</button>
+            </form>
+            <div class="lab-toolbar">
+                <button type="button" class="lab-btn" data-lab-hint>💡 提示</button>
+                <button type="button" class="lab-btn" data-lab-clear>清屏</button>
+                <button type="button" class="lab-btn" data-lab-reset>重置任务</button>
+                <span class="lab-steps" data-lab-steps>步数 0</span>
+            </div>
+        </div>
+    </section>
+    {{- end }}
+
     {{- with $p.quiz }}
     <section class="lesson-block lesson-quiz" data-quiz>
-        <h2>📝 本关自测 <small>（{{ len . }} 题，全部答对 +20 XP）</small></h2>
+        <h2>📝 本关自测 <small>（{{ len . }} 题，全对 +20 XP；也可以用它速通）</small></h2>
         {{- range $qi, $q := . }}
         <div class="quiz-q" data-answer="{{ $q.answer }}">
             <p class="quiz-prompt"><span class="quiz-index">{{ add $qi 1 }}.</span>{{ $q.q }}</p>
@@ -75,8 +112,8 @@
     {{- end }}
 
     <section class="lesson-finish">
-        <button type="button" class="course-complete" data-course-complete>完成本关 · +{{ $p.xp }} XP</button>
-        <p class="lesson-finish-hint" data-finish-hint>完成本关即可获得 {{ $p.xp }} XP；自测全对再额外 +20 XP。</p>
+        <button type="button" class="course-complete" data-course-complete disabled>完成终端任务或自测满分后结算</button>
+        <p class="lesson-finish-hint" data-finish-hint>完成终端任务或自测满分后即可结算；提示越少、步数越少，星级越高。</p>
     </section>
 
     <nav class="lesson-nav">
@@ -95,4 +132,6 @@
 
 {{ partialCached "footer/footer" . }}
 {{- partial "docker/course-data" . -}}
+{{- partial "docker/labs-data" . -}}
+{{- partial "docker/cards-data" . -}}
 {{ end }}

@@ -11,6 +11,10 @@
     {{- end -}}
 {{- end -}}
 {{- $firstRank := index $cur.ranks 0 -}}
+{{- $cardsTotal := 0 -}}
+{{- with hugo.Data.docker.cards -}}
+    {{- with .items -}}{{- $cardsTotal = len . -}}{{- end -}}
+{{- end -}}
 
 <div class="docker-course" data-course-home>
     <header class="course-hero">
@@ -46,6 +50,10 @@
                     <strong data-course-rank>{{ $firstRank.icon }} {{ $firstRank.name }}</strong>
                     <span>当前等级</span>
                 </div>
+                <div class="course-stat">
+                    <strong data-course-cards>0/{{ $cardsTotal }}</strong>
+                    <span>卡牌</span>
+                </div>
             </div>
             <p class="course-next-rank" data-course-next-rank></p>
         </div>
@@ -69,6 +77,7 @@
                         <span class="lesson-status" aria-hidden="true"></span>
                         <span class="lesson-main">
                             <span class="lesson-title">{{ $l.title }}</span>
+                            <span class="lesson-stars" data-lesson-stars aria-hidden="true"></span>
                             <span class="lesson-meta">
                                 <span class="chip chip-{{ $l.level }}">{{ $l.difficulty }}</span>
                                 <span>⏱ {{ $l.minutes }} 分钟</span>
@@ -99,11 +108,16 @@
 
     <div class="course-footnote">
         <p>💡 进度保存在本机浏览器（localStorage），换设备或清缓存会重置。正文仍在博客的
-            <a href="{{ "posts/" | relURL }}">文章归档</a>，课程页只做导读与自测。</p>
-        <button type="button" class="course-reset" data-course-reset>重置进度</button>
+            <a href="{{ "posts/" | relURL }}">文章归档</a>，课程页只做导读与实战模拟。</p>
+        <p class="course-footnote-links">
+            <a class="course-cards-link" href="{{ "docker/cards/" | relURL }}">🃏 卡牌图鉴</a>
+            <span>卡包 <span data-course-packs>0</span> 个</span>
+            <button type="button" class="course-reset" data-course-reset>重置进度</button>
+        </p>
     </div>
 </div>
 
 {{ partialCached "footer/footer" . }}
 {{- partial "docker/course-data" . -}}
+{{- partial "docker/cards-data" . -}}
 {{ end }}

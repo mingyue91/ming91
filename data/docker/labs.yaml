@@ -1,0 +1,233 @@
+# Docker 学习路径：终端实验室数据
+# key = 关卡 id（对应 curriculum.yaml 里的 lessons[].id）
+# 前端 docker-sim.ts 执行命令，docker-lab.ts 渲染界面，check 判定是否达成
+#
+# check 支持的类型：
+#   image-exists / image-missing           { name }
+#   container-exists / container-running / container-stopped / container-removed   { name }
+#   container-image                        { image }
+#   port-mapped                            { name, host, container }
+#   volume-exists { name } / volume-mounted { name, dest }
+#   network-exists { name } / container-network { name, network }
+#   env-set { name, key, value? }
+#   memory-limit { name, value }
+#   restart-policy { name, policy }
+#   compose-services { services: [] }
+#   used-ps-a / used-exec / used-logs / used-ping / used-run / pulled-image / sudo-granted
+
+intro:
+  brief: "跑通第一个容器：拉取 hello-world，运行它，再用 ps -a 找到已经退出的容器。"
+  init:
+    images: []
+  tasks:
+    - label: "拉取 hello-world 镜像"
+      check: { type: "image-exists", name: "hello-world" }
+    - label: "运行一个 hello-world 容器"
+      check: { type: "container-image", image: "hello-world" }
+    - label: "用 docker ps -a 看到已退出的容器"
+      check: { type: "used-ps-a" }
+  hints:
+    - "hello-world 是验证安装的最小镜像，先执行 docker pull hello-world。"
+    - "运行它：docker run hello-world，容器打印提示后会立刻退出。"
+    - "完整流程：docker pull hello-world → docker run hello-world → docker ps -a"
+  referenceSteps: 3
+
+add-user-to-group:
+  brief: "先体验一次 permission denied，再把用户加入 docker 组并让权限生效。"
+  init:
+    sudo: false
+  tasks:
+    - label: "把当前用户加入 docker 组"
+      check: { type: "sudo-granted" }
+    - label: "权限生效后跑起一个名为 demo 的容器"
+      check: { type: "container-running", name: "demo" }
+  hints:
+    - "先执行 docker ps，看看报错是不是 permission denied。"
+    - "加组：sudo usermod -aG docker $USER"
+    - "让组身份在当前会话生效：newgrp docker，然后 docker run -d --name demo nginx"
+  referenceSteps: 4
+
+dockerfile-basics:
+  brief: "构建镜像 myapp:1.0，然后把它跑起来并映射宿主机 5000 端口。"
+  init:
+    images: []
+  tasks:
+    - label: "构建出 myapp:1.0 镜像"
+      check: { type: "image-exists", name: "myapp:1.0" }
+    - label: "用这个镜像启动名为 app 的容器"
+      check: { type: "container-running", name: "app" }
+    - label: "把容器 5000 端口映射到宿主机 5000"
+      check: { type: "port-mapped", name: "app", host: 5000, container: 5000 }
+  hints:
+    - "构建命令是 docker build -t 名称:标签 .，最后的点表示构建上下文。"
+    - "docker build -t myapp:1.0 ."
+    - "docker build -t myapp:1.0 . 然后 docker run -d --name app -p 5000:5000 myapp:1.0"
+  referenceSteps: 2
+
+dockerfile-reference:
+  brief: "构建一个瘦身版镜像 myapp:slim，并把它跑到宿主机的 8080 端口。"
+  init:
+    images: []
+  tasks:
+    - label: "构建出 myapp:slim 镜像"
+      check: { type: "image-exists", name: "myapp:slim" }
+    - label: "启动名为 slim-app 的容器"
+      check: { type: "container-running", name: "slim-app" }
+    - label: "映射宿主机 8080 到容器 80"
+      check: { type: "port-mapped", name: "slim-app", host: 8080, container: 80 }
+  hints:
+    - "多阶段构建的最后阶段才是最终镜像，这里用 -t myapp:slim 打标签。"
+    - "docker build -t myapp:slim ."
+    - "docker build -t myapp:slim . 然后 docker run -d --name slim-app -p 8080:80 myapp:slim"
+  referenceSteps: 2
+
+docker-image-commands:
+  brief: "镜像三连：拉取 alpine:3.20，打上 web:1.0 标签，再删掉原来的标签。"
+  init:
+    images: []
+  tasks:
+    - label: "拉取 alpine:3.20"
+      check: { type: "pulled-image", name: "alpine:3.20" }
+    - label: "给镜像打上 web:1.0 标签"
+      check: { type: "image-exists", name: "web:1.0" }
+    - label: "删除 alpine:3.20 这个标签"
+      check: { type: "image-missing", name: "alpine:3.20" }
+  hints:
+    - "先 docker pull alpine:3.20。"
+    - "打标签用 docker tag 源镜像 新镜像:标签。"
+    - "docker pull alpine:3.20 → docker tag alpine:3.20 web:1.0 → docker rmi alpine:3.20"
+  referenceSteps: 3
+
+docker-container-commands:
+  brief: "走一遍容器生命周期：启动 → 看日志 → 进容器 → 停止 → 删除。"
+  init:
+    images: []
+  tasks:
+    - label: "启动名为 web 的 nginx 容器"
+      check: { type: "used-run", name: "web" }
+    - label: "用 docker logs 查看它的日志"
+      check: { type: "used-logs" }
+    - label: "用 docker exec 进入容器执行命令"
+      check: { type: "used-exec" }
+    - label: "最后把 web 容器删除"
+      check: { type: "container-removed", name: "web" }
+  hints:
+    - "先 docker run -d --name web nginx。"
+    - "日志：docker logs web；进容器：docker exec -it web sh。"
+    - "顺序：run → logs → exec → docker stop web → docker rm web"
+  referenceSteps: 5
+
+docker-run-parameters:
+  brief: "一条命令塞满常用参数：后台、命名、端口、卷、环境变量、重启策略。"
+  init:
+    images: ["nginx:latest"]
+    volumes: ["webdata"]
+  tasks:
+    - label: "启动名为 web 的容器并后台运行"
+      check: { type: "container-running", name: "web" }
+    - label: "映射宿主机 8080 到容器 80"
+      check: { type: "port-mapped", name: "web", host: 8080, container: 80 }
+    - label: "把命名卷 webdata 挂到 /usr/share/nginx/html"
+      check: { type: "volume-mounted", name: "web", dest: "/usr/share/nginx/html" }
+    - label: "设置环境变量 APP_ENV=production"
+      check: { type: "env-set", name: "web", key: "APP_ENV", value: "production" }
+    - label: "重启策略设为 unless-stopped"
+      check: { type: "restart-policy", name: "web", policy: "unless-stopped" }
+  hints:
+    - "参数都是 - 开头，注意端口顺序是「宿主机:容器」。"
+    - "docker run -d --name web -p 8080:80 -v webdata:/usr/share/nginx/html nginx"
+    - "再加上 -e APP_ENV=production --restart unless-stopped，注意两个参数各占一个位置。"
+  referenceSteps: 1
+
+docker-storage-network:
+  brief: "创建自定义网络 appnet，让 api 和 db 两个容器接入并互相 ping 通。"
+  init:
+    images: ["nginx:latest", "alpine:3.20"]
+  tasks:
+    - label: "创建自定义网络 appnet"
+      check: { type: "network-exists", name: "appnet" }
+    - label: "启动 api 容器并接入 appnet"
+      check: { type: "container-network", name: "api", network: "appnet" }
+    - label: "启动 db 容器并接入 appnet"
+      check: { type: "container-network", name: "db", network: "appnet" }
+    - label: "在 api 里 ping 通 db"
+      check: { type: "used-ping" }
+  hints:
+    - "先 docker network create appnet。"
+    - "启动时用 --network appnet 接入，例如 docker run -d --name api --network appnet nginx。"
+    - "docker run -d --name db --network appnet alpine:3.20 sleep 3600，然后 docker exec -it api ping db。"
+  referenceSteps: 5
+
+docker-volume-bind-mount:
+  brief: "创建命名卷 mysql-data 并挂到 MySQL 数据目录，让数据不随容器消失。"
+  init:
+    images: []
+  tasks:
+    - label: "创建命名卷 mysql-data"
+      check: { type: "volume-exists", name: "mysql-data" }
+    - label: "启动名为 db 的 MySQL 容器"
+      check: { type: "container-running", name: "db" }
+    - label: "把卷挂载到 /var/lib/mysql"
+      check: { type: "volume-mounted", name: "db", dest: "/var/lib/mysql" }
+  hints:
+    - "创建卷：docker volume create mysql-data。"
+    - "挂载参数是 -v 卷名:容器内路径。"
+    - "docker volume create mysql-data → docker run -d --name db -v mysql-data:/var/lib/mysql mysql:8.0"
+  referenceSteps: 2
+
+docker-compose-commands:
+  brief: "用一条 compose 命令拉起 web 和 api 两个服务。"
+  init:
+    images: []
+    compose:
+      project: "shop"
+      services:
+        - name: "web"
+          image: "nginx:latest"
+          ports: ["8080:80"]
+        - name: "api"
+          image: "node:20-alpine"
+  tasks:
+    - label: "用 docker compose up -d 启动整套服务"
+      check: { type: "compose-services", services: ["web", "api"] }
+  hints:
+    - "Compose 命令是 docker compose up -d（注意 compose 和 up 之间有空格）。"
+    - "确认服务已启动：docker compose ps。"
+    - "完整命令：docker compose up -d，然后 docker compose ps 看两个服务。"
+  referenceSteps: 1
+
+docker-mysql-deploy:
+  brief: "部署 MySQL 8：root 密码、端口映射、数据卷一次配好。"
+  init:
+    images: []
+  tasks:
+    - label: "启动名为 mysql 的容器"
+      check: { type: "container-running", name: "mysql" }
+    - label: "映射宿主机 3306 到容器 3306"
+      check: { type: "port-mapped", name: "mysql", host: 3306, container: 3306 }
+    - label: "设置 root 密码为 root123"
+      check: { type: "env-set", name: "mysql", key: "MYSQL_ROOT_PASSWORD", value: "root123" }
+    - label: "把 mysql-data 卷挂到 /var/lib/mysql"
+      check: { type: "volume-mounted", name: "mysql", dest: "/var/lib/mysql" }
+  hints:
+    - "MySQL 官方镜像用 MYSQL_ROOT_PASSWORD 初始化密码。"
+    - "数据目录固定是 /var/lib/mysql，端口默认 3306。"
+    - "docker run -d --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root123 -v mysql-data:/var/lib/mysql mysql:8.0"
+  referenceSteps: 1
+
+docker-advanced-usage:
+  brief: "构建一个精简镜像 secure-app:1.0，并给容器加上 512MB 内存限制。"
+  init:
+    images: []
+  tasks:
+    - label: "构建出 secure-app:1.0 镜像"
+      check: { type: "image-exists", name: "secure-app:1.0" }
+    - label: "启动名为 app 的容器"
+      check: { type: "container-running", name: "app" }
+    - label: "内存限制为 512m"
+      check: { type: "memory-limit", name: "app", value: "512m" }
+  hints:
+    - "先 docker build -t secure-app:1.0 ."
+    - "内存限制参数是 --memory，可以简写成 -m。"
+    - "docker build -t secure-app:1.0 . → docker run -d --name app --memory=512m secure-app:1.0"
+  referenceSteps: 2

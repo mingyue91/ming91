@@ -1,0 +1,5 @@
+{{- /* 终端实验室数据：key 为关卡 id */ -}}
+{{- $labs := hugo.Data.docker.labs | default dict -}}
+{{- $json := $labs | jsonify -}}
+{{- $json = replace $json "</" "<\\/" -}}
+<script type="application/json" id="docker-labs-data">{{ $json | safeJS }}</script>

@@ -1,0 +1,69 @@
+{{ define "body-class" }}docker-course-page docker-cards-page{{ end }}
+
+{{ define "main" }}
+<div class="docker-cards" data-cards-page>
+    <nav class="lesson-breadcrumb">
+        <a href="{{ "docker/" | relURL }}">← Docker 学习路径</a>
+        <span class="crumb-sep">/</span>
+        <span>卡牌图鉴</span>
+    </nav>
+
+    <header class="cards-hero">
+        <p class="course-kicker">🃏 收集 · 复习</p>
+        <h1 class="course-title">{{ .Title }}</h1>
+        <p class="course-sub">{{ .Description }}</p>
+
+        <div class="cards-stats">
+            <div class="cards-stat">
+                <strong><span data-card-count>0</span>/<span data-card-total>0</span></strong>
+                <span>已收集</span>
+            </div>
+            <div class="cards-stat">
+                <strong data-card-packs>0</strong>
+                <span>卡包</span>
+            </div>
+            <div class="cards-stat">
+                <strong data-card-fragments>0/5</strong>
+                <span>碎片</span>
+            </div>
+        </div>
+        <div class="cards-progress" aria-hidden="true">
+            <span class="cards-progress-bar" data-card-progress></span>
+        </div>
+
+        <div class="cards-actions">
+            <button type="button" class="course-complete" data-card-pack>🎁 开卡包</button>
+            <button type="button" class="cards-secondary" data-card-compose>🧩 合成（5 碎片）</button>
+            <span class="cards-hint" data-card-pack-hint></span>
+        </div>
+    </header>
+
+    <section class="cards-review">
+        <h2 class="section-title">🧠 记忆闪卡</h2>
+        <p class="cards-review-desc">随机抽 5 张已收集的卡：先看命令回忆用途，点卡片翻面看答案。</p>
+        <button type="button" class="cards-secondary" data-review-start>开始复习</button>
+        <div class="review-board" data-review-board hidden>
+            <div class="review-card" data-review-card>
+                <div class="review-face review-front" data-review-front></div>
+                <div class="review-face review-back" data-review-back></div>
+            </div>
+            <div class="review-actions">
+                <span class="review-progress" data-review-progress>0/0</span>
+                <button type="button" class="cards-secondary" data-review-exit>退出</button>
+                <button type="button" class="course-complete" data-review-next>下一张 →</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="card-grid-wrap" data-card-grid></div>
+    <noscript><p class="cards-hint">卡牌图鉴需要 JavaScript 才能加载。</p></noscript>
+
+    <div class="course-footnote">
+        <p>💡 首次通关掉落该关主题卡；2★ 以上通关或自测满分获得卡包；重复卡自动转碎片，5 碎片可合成一张未拥有的卡。</p>
+    </div>
+</div>
+
+{{ partialCached "footer/footer" . }}
+{{- partial "docker/cards-data" . -}}
+{{- partial "docker/course-data" . -}}
+{{ end }}
